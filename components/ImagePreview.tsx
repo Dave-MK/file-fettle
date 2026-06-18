@@ -50,12 +50,14 @@ export default function ImagePreview({ originalFile, resultBlob, originalSize, r
       </p>
       <div
         ref={containerRef}
-        style={{ position: "relative", borderRadius: 10, overflow: "hidden", cursor: "ew-resize", userSelect: "none", background: "var(--bg-elevated)" }}
+        style={{ position: "relative", borderRadius: 10, overflow: "hidden", cursor: "ew-resize", userSelect: "none", touchAction: "none", background: "var(--bg-elevated)" }}
         onMouseDown={() => setDragging(true)}
         onMouseMove={e => dragging && handleMove(e.clientX)}
         onMouseUp={() => setDragging(false)}
         onMouseLeave={() => setDragging(false)}
-        onTouchMove={e => handleMove(e.touches[0].clientX)}
+        onTouchStart={() => setDragging(true)}
+        onTouchMove={e => { e.preventDefault(); handleMove(e.touches[0].clientX); }}
+        onTouchEnd={() => setDragging(false)}
       >
         {/* Original (full width, clipped right) */}
         <img

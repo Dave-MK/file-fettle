@@ -35,7 +35,7 @@ export default function PrivacyShield({ stats, done }: Props) {
             : "Unexpected outbound connections were intercepted"}
         </p>
       </div>
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
+      <div className="privacy-stats" style={{ textAlign: "right", flexShrink: 0 }}>
         <p style={{ fontSize: 18, fontWeight: 800, color: clean ? "var(--green)" : "#f87171", lineHeight: 1 }}>
           {stats.externalRequests}
         </p>

@@ -29,14 +29,17 @@ export default function DropZone({ category, multiple, onFiles, minHeight = 180 
 
   return (
     <div
-      className={`dropzone${over ? " dropzone-over" : ""} flex flex-col items-center justify-center gap-3 p-10 text-center select-none`}
-      style={{ minHeight }}
+      className={`dropzone${over ? " dropzone-over" : ""} flex flex-col items-center justify-center gap-4 text-center select-none`}
+      style={{ minHeight, padding: "36px 32px" }}
       onClick={() => inputRef.current?.click()}
       onDragOver={e => { e.preventDefault(); setOver(true); }}
       onDragLeave={() => setOver(false)}
       onDrop={handleDrop}
       role="button"
       tabIndex={0}
+      aria-label={category
+        ? `Drop ${category.label.toLowerCase()} files here, or press Enter to browse`
+        : "Drop files here, or press Enter to browse"}
       onKeyDown={e => e.key === "Enter" && inputRef.current?.click()}
     >
       <input
@@ -47,25 +50,41 @@ export default function DropZone({ category, multiple, onFiles, minHeight = 180 
         multiple={multiple}
         onChange={handleChange}
       />
-      <div style={{ fontSize: 36 }}>{category?.icon ?? "📁"}</div>
+
+      <div style={{
+        width: 64, height: 64, borderRadius: 18,
+        background: over ? "var(--accent-dim)" : "rgba(255,255,255,0.05)",
+        border: `1px solid ${over ? "var(--accent)" : "var(--border)"}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 28, transition: "all 0.2s", flexShrink: 0,
+      }}>
+        {category?.icon ?? "📁"}
+      </div>
+
       <div>
-        <p className="font-semibold text-base" style={{ color: "var(--text)" }}>
+        <p style={{ fontWeight: 700, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>
           Drop {multiple ? "files" : `your ${category?.label.toLowerCase() ?? "file"}`} here
         </p>
-        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-          or click to browse{multiple ? " (select multiple)" : ""}
+        <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
+          or click to browse{multiple ? " — select multiple" : ""}
         </p>
       </div>
+
       {category && (
-        <p className="text-xs px-4" style={{ color: "var(--text-muted)" }}>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", paddingLeft: 24, paddingRight: 24 }}>
           Accepts: {category.description}
         </p>
       )}
-      <div
-        className="text-xs px-3 py-1 rounded-full mt-1"
-        style={{ background: "rgba(255,255,255,0.04)", color: "var(--text-muted)", border: "1px solid var(--border)" }}
-      >
-        🔒 Files never leave your device
+
+      <div style={{
+        display: "flex", alignItems: "center", gap: 6,
+        fontSize: 12, color: "var(--text-muted)",
+        padding: "5px 12px", borderRadius: 999,
+        background: "rgba(34,197,94,0.07)",
+        border: "1px solid rgba(34,197,94,0.18)",
+      }}>
+        <span>🔒</span>
+        <span>Files never leave your device</span>
       </div>
     </div>
   );

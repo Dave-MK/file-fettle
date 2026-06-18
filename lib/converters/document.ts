@@ -152,7 +152,10 @@ function inline(s: string): string {
     .replace(/_(.+?)_/g,           "<em>$1</em>")
     .replace(/~~(.+?)~~/g,         "<del>$1</del>")
     .replace(/`([^`]+)`/g,         "<code>$1</code>")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, href) => {
+      const safe = /^https?:|^mailto:/i.test(href) ? href : "#";
+      return `<a href="${safe}">${text}</a>`;
+    });
 }
 
 function mdToText(md: string): string {
@@ -198,7 +201,7 @@ ${body}
 
 function rtfToText(rtf: string): string {
   // Remove RTF header, groups, and control words
-  let text = rtf
+  const text = rtf
     .replace(/\{\\[^}]*\}/g, "")          // remove groups like {\colortbl ...}
     .replace(/\\[a-z*]+\-?\d*[ ]?/g, " ") // remove control words like \par \b \f0
     .replace(/[{}\\]/g, "")               // remove remaining braces and backslashes
@@ -314,10 +317,7 @@ export async function convertDocument(file: File, opts: DocConvertOptions): Prom
     return textToPdf(text);
   }
   if ((src === "docx" || src === "doc") && opts.targetExt === "md") {
-    const html  = await docxToHtml(file);
-    const div   = document.createElement("div");
-    div.innerHTML = html;
-    return new Blob([htmlToMd(html)], { type: "text/markdown" });
+    return new Blob([htmlToMd(await docxToHtml(file))], { type: "text/markdown" });
   }
 
   // ── TXT ──────────────────────────────────────────────────────────────────

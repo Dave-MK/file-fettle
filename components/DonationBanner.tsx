@@ -33,11 +33,11 @@ export default function DonationBanner({ variant = "inline" }: Props) {
     return (
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        gap: 12, padding: "10px 14px",
+        flexWrap: "wrap", gap: 10, padding: "10px 14px",
         background: "linear-gradient(135deg, rgba(124,106,247,0.08), rgba(34,197,94,0.06))",
         border: "1px solid rgba(124,106,247,0.2)", borderRadius: 10,
       }}>
-        <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0, flex: "1 1 180px" }}>
           <span style={{ color: "var(--accent)", fontWeight: 600 }}>FileFettle is free for everyone.</span>
           {" "}A contribution keeps it that way.
         </p>
@@ -45,8 +45,9 @@ export default function DonationBanner({ variant = "inline" }: Props) {
           onClick={handleDonate}
           style={{
             background: "var(--accent)", color: "#fff", border: "none",
-            borderRadius: 6, padding: "5px 12px", fontSize: 12, fontWeight: 600,
+            borderRadius: 6, padding: "7px 14px", fontSize: 12, fontWeight: 600,
             cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
+            minHeight: 36, touchAction: "manipulation",
           }}
         >
           ☕ Support

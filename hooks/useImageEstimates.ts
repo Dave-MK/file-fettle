@@ -8,7 +8,7 @@ export function useImageEstimates(file: File | undefined, quality: number): Map<
   const [estimates, setEstimates] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
-    if (!file || !file.type.startsWith("image")) { setEstimates(new Map()); return; }
+    if (!file || !file.type.startsWith("image")) return;
 
     let cancelled = false;
     const ext     = file.name.split(".").pop()?.toLowerCase() ?? "";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export interface NetworkStats {
   externalRequests: number;
@@ -23,11 +23,14 @@ export function useNetworkMonitor(active: boolean) {
   const originalFetch       = useRef<typeof fetch | null>(null);
   const originalXHROpen     = useRef<typeof XMLHttpRequest.prototype.open | null>(null);
 
+  // Reset synchronously before the patching effect fires, so the counter
+  // starts at zero the moment monitoring becomes active.
+  useLayoutEffect(() => {
+    if (active) setStats({ externalRequests: 0, externalBytes: 0 });
+  }, [active]);
+
   useEffect(() => {
     if (!active) return;
-
-    // Reset on activation
-    setStats({ externalRequests: 0, externalBytes: 0 });
 
     // Patch fetch
     originalFetch.current = window.fetch;
@@ -36,8 +39,7 @@ export function useNetworkMonitor(active: boolean) {
       if (!isTrusted(url)) {
         setStats(s => ({ externalRequests: s.externalRequests + 1, externalBytes: s.externalBytes }));
       }
-      const res = await originalFetch.current!(input, init);
-      return res;
+      return originalFetch.current!(input, init);
     };
 
     // Patch XHR

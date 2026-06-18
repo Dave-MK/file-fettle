@@ -39,8 +39,8 @@ export default function ImageOptions({ resize, onChange, stripExif, onStripExif,
       {/* Resize */}
       <div>
         <p className="text-xs font-semibold mb-2" style={{ color: "var(--text-muted)" }}>Resize (optional)</p>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 100px", minWidth: 80 }}>
             <label style={{ fontSize: 11, color: "var(--text-muted)", display: "block", marginBottom: 4 }}>Width (px)</label>
             <input
               type="number"
@@ -49,14 +49,15 @@ export default function ImageOptions({ resize, onChange, stripExif, onStripExif,
               value={resize.width ?? ""}
               onChange={e => setW(e.target.value)}
               style={{
-                width: "100%", padding: "6px 10px",
+                width: "100%", padding: "8px 10px",
                 background: "var(--bg-elevated)", border: "1px solid var(--border)",
                 borderRadius: 6, color: "var(--text)", fontSize: 13, outline: "none",
+                minHeight: 40,
               }}
             />
           </div>
           <span style={{ color: "var(--text-muted)", fontSize: 18, marginTop: 16, flexShrink: 0 }}>×</span>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: "1 1 100px", minWidth: 80 }}>
             <label style={{ fontSize: 11, color: "var(--text-muted)", display: "block", marginBottom: 4 }}>Height (px)</label>
             <input
               type="number"
@@ -65,9 +66,10 @@ export default function ImageOptions({ resize, onChange, stripExif, onStripExif,
               value={resize.height ?? ""}
               onChange={e => setH(e.target.value)}
               style={{
-                width: "100%", padding: "6px 10px",
+                width: "100%", padding: "8px 10px",
                 background: "var(--bg-elevated)", border: "1px solid var(--border)",
                 borderRadius: 6, color: "var(--text)", fontSize: 13, outline: "none",
+                minHeight: 40,
               }}
             />
           </div>

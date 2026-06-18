@@ -1,12 +1,7 @@
-const CACHE = "filefettle-v1";
-
-// App shell assets to pre-cache on install
-const PRECACHE = ["/"];
+const CACHE = "filefettle-v2";
 
 self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
-  );
+  e.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", e => {
@@ -20,35 +15,37 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
 
-  // Never intercept: API routes, HMR, Chrome extension requests
+  // Never intercept: navigation, HMR, cross-origin, non-GET
+  // Navigation must go to network so COOP/COEP headers are always present
+  // (required for cross-origin-isolated / SharedArrayBuffer / FFmpeg WASM)
   if (
+    e.request.mode === "navigate" ||
     url.pathname.startsWith("/_next/webpack-hmr") ||
     url.protocol === "chrome-extension:" ||
+    url.origin !== self.location.origin ||
     e.request.method !== "GET"
   ) return;
 
-  // Network-first for Next.js build assets (always fresh in dev, hashed in prod)
+  // Cache-first for hashed Next.js static assets (_next/static/**)
   if (url.pathname.startsWith("/_next/static/")) {
     e.respondWith(
-      fetch(e.request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+      caches.match(e.request).then(cached => cached ||
+        fetch(e.request).then(res => {
+          caches.open(CACHE).then(c => c.put(e.request, res.clone()));
           return res;
         })
-        .catch(() => caches.match(e.request))
+      )
     );
     return;
   }
 
-  // Cache-first for same-origin navigation + static assets
+  // Network-first for everything else (public assets, manifest, icons)
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      const network = fetch(e.request).then(res => {
+    fetch(e.request)
+      .then(res => {
         if (res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
         return res;
-      });
-      return cached ?? network;
-    })
+      })
+      .catch(() => caches.match(e.request))
   );
 });
