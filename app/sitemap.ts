@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllFormatPairs, FEATURED_PAIRS } from "@/lib/format-pairs";
 
-const BASE = "https://file-fettle.vercel.app";
+const BASE = "https://filefettle.pro";
 
 function url(path: string, priority: number, freq: MetadataRoute.Sitemap[number]["changeFrequency"] = "monthly") {
   return { url: `${BASE}${path}`, lastModified: new Date(), changeFrequency: freq, priority };

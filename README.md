@@ -2,7 +2,7 @@
 
 Convert any file, instantly and privately — 100% in your browser.
 
-**Live:** [file-fettle.vercel.app](https://file-fettle.vercel.app)
+**Live:** [filefettle.pro](https://filefettle.pro)
 
 ## What it does
 

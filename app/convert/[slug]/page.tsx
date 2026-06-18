@@ -41,7 +41,7 @@ export default async function ConvertPairPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: `${pair.fromLabel} to ${pair.toLabel} Converter`,
-    url: `https://file-fettle.vercel.app/convert/${pair.slug}`,
+    url: `https://filefettle.pro/convert/${pair.slug}`,
     description: `Convert ${pair.fromLabel} to ${pair.toLabel} free in your browser. No upload required.`,
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",

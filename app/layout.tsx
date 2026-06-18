@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   applicationName: "FileFettle",
   creator: "FileFettle",
   manifest: "/manifest.json",
-  metadataBase: new URL("https://file-fettle.vercel.app"),
+  metadataBase: new URL("https://filefettle.pro"),
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    url: "https://file-fettle.vercel.app",
+    url: "https://filefettle.pro",
     title: "FileFettle — Free Online File Converter | No Upload Required",
     description:
       "Convert any file free in your browser — no upload, no limits, no account required. 80+ formats.",
@@ -69,9 +69,9 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://file-fettle.vercel.app/#app",
+      "@id": "https://filefettle.pro/#app",
       name: "FileFettle",
-      url: "https://file-fettle.vercel.app",
+      url: "https://filefettle.pro",
       description:
         "Free online file converter. Convert images, audio, video, documents and data files entirely in your browser — no upload, no registration, no file size limits.",
       applicationCategory: "UtilitiesApplication",
@@ -177,7 +177,7 @@ const jsonLd = {
       ],
       totalTime: "PT30S",
       estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "0" },
-      tool: [{ "@type": "SoftwareApplication", name: "FileFettle", url: "https://file-fettle.vercel.app" }],
+      tool: [{ "@type": "SoftwareApplication", name: "FileFettle", url: "https://filefettle.pro" }],
     },
   ],
 };

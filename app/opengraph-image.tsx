@@ -63,7 +63,7 @@ export default async function OgImage() {
 
         {/* URL */}
         <div style={{ position: "absolute", bottom: 36, fontSize: 16, color: "rgba(255,255,255,0.3)" }}>
-          file-fettle.vercel.app
+          filefettle.pro
         </div>
       </div>
     ),
