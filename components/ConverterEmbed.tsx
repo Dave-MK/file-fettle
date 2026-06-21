@@ -29,11 +29,7 @@ function uid(): string {
   return Math.random().toString(36).slice(2, 9);
 }
 
-function fmtBytes(b: number): string {
-  if (b < 1024)       return `${b} B`;
-  if (b < 1_048_576)  return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 export default function ConverterEmbed({
   fromExt, toExt, fromLabel, toLabel, targetMime, categoryId,
@@ -95,15 +91,7 @@ export default function ConverterEmbed({
     fresh.forEach(j => runJob(j));
   }, [runJob]);
 
-  const triggerDownload = (job: Job) => {
-    if (!job.result) return;
-    const url = URL.createObjectURL(job.result);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = job.resultName ?? `converted.${toExt}`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+
 
   const category = CATEGORIES.find(c => c.id === categoryId);
   const doneJobs = jobs.filter(j => j.status === "done");
@@ -171,7 +159,7 @@ export default function ConverterEmbed({
               <button
                 className="btn-primary"
                 style={{ padding: "8px 20px", fontSize: 14 }}
-                onClick={() => doneJobs.forEach(triggerDownload)}
+                onClick={() => doneJobs.forEach(j => downloadBlob(j.result!, j.resultName ?? `converted.${toExt}`))}
               >
                 Download all ({doneJobs.length})
               </button>
@@ -201,7 +189,7 @@ export default function ConverterEmbed({
                     <button
                       className="btn-primary"
                       style={{ padding: "6px 14px", fontSize: 13, flexShrink: 0 }}
-                      onClick={() => triggerDownload(job)}
+                      onClick={() => downloadBlob(job.result!, job.resultName ?? `converted.${toExt}`)}
                       aria-label={`Download ${job.resultName}`}
                     >
                       Download

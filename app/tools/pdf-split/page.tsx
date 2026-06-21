@@ -2,14 +2,9 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { fmtBytes } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "ready" | "splitting" | "done" | "error";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
 
 function parseRanges(input: string, total: number): number[][] {
   const ranges: number[][] = [];

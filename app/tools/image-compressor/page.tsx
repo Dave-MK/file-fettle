@@ -2,12 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Status = "idle" | "ready" | "compressing" | "done" | "error";
 type OutputFmt = "image/jpeg" | "image/webp";
@@ -72,12 +67,7 @@ export default function ImageCompressorPage() {
     if (!result || !file) return;
     const ext  = format === "image/webp" ? "webp" : "jpg";
     const base = file.name.replace(/\.[^.]+$/, "");
-    const url  = URL.createObjectURL(result.blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `${base}_compressed.${ext}`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(result.blob, `${base}_compressed.${ext}`);
   };
 
   const saving = result && file

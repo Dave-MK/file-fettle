@@ -17,6 +17,7 @@ import PrivacyShield         from "@/components/PrivacyShield";
 import ImagePreview          from "@/components/ImagePreview";
 import ImageOptions          from "@/components/ImageOptions";
 import DonationBanner        from "@/components/DonationBanner";
+import { fmtBytes, downloadBlob, qualityLabel } from "@/lib/utils";
 
 type Stage = "pick-category" | "pick-options" | "converting" | "done";
 
@@ -27,14 +28,9 @@ const HOMEPAGE_TOOLS = [
   { href: "/tools/image-compressor", icon: "🗜️", title: "Image Compressor" },
   { href: "/tools/file-hash",        icon: "🔑", title: "File Hash" },
   { href: "/tools/base64",           icon: "🔠", title: "Base64" },
+  { href: "/tools/file-encrypt",     icon: "🔒", title: "File Encrypt" },
+  { href: "/tools/exif-viewer",      icon: "📸", title: "EXIF Viewer" },
 ];
-
-function fmt(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1024 ** 2) return `${(b / 1024).toFixed(1)} KB`;
-  if (b < 1024 ** 3) return `${(b / 1024 ** 2).toFixed(1)} MB`;
-  return `${(b / 1024 ** 3).toFixed(1)} GB`;
-}
 
 let jobIdCounter = 0;
 function mkJob(file: File): FileJob {
@@ -161,10 +157,7 @@ export default function Home() {
     const zip = new JSZip();
     for (const j of doneJobs) zip.file(j.resultName!, j.result!);
     const blob = await zip.generateAsync({ type: "blob" });
-    const url  = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement("a"), { href: url, download: "filefettle-batch.zip" });
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    downloadBlob(blob, "filefettle-batch.zip");
   };
 
   const reset = () => {
@@ -527,7 +520,7 @@ export default function Home() {
                 const saved    = totalIn > totalOut ? Math.round((1 - totalOut / totalIn) * 100) : 0;
                 return (
                   <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
-                    {fmt(totalIn)} → {fmt(totalOut)}{saved > 0 ? ` · ${saved}% smaller` : ""}
+                    {fmtBytes(totalIn)} → {fmtBytes(totalOut)}{saved > 0 ? ` · ${saved}% smaller` : ""}
                   </p>
                 );
               })()}
@@ -570,12 +563,6 @@ export default function Home() {
 
 function QualitySlider({ quality, onQuality, categoryId }: { quality: number; onQuality: (v: number) => void; categoryId?: string }) {
   const isAV = categoryId === "audio" || categoryId === "video";
-  function label(q: number) {
-    if (q <= 0.25) return "Maximum compression";
-    if (q <= 0.5)  return "Balanced";
-    if (q <= 0.75) return "High quality";
-    return "Maximum quality";
-  }
   return (
     <div className="card p-4 flex flex-col gap-3">
       <div>
@@ -587,7 +574,7 @@ function QualitySlider({ quality, onQuality, categoryId }: { quality: number; on
       <div className="flex flex-col gap-2">
         <div className="flex justify-between text-xs" style={{ color: "var(--text-muted)" }}>
           <span>Smallest file</span>
-          <span className="font-semibold" style={{ color: "var(--accent)" }}>{label(quality)}</span>
+          <span className="font-semibold" style={{ color: "var(--accent)" }}>{qualityLabel(quality)}</span>
           <span>Best quality</span>
         </div>
         <input type="range" className="slider" min={0} max={100} value={Math.round(quality * 100)} onChange={e => onQuality(parseInt(e.target.value) / 100)} />

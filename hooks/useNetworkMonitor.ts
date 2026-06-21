@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface NetworkStats {
   externalRequests: number;
@@ -20,14 +20,17 @@ function isTrusted(url: string): boolean {
 
 export function useNetworkMonitor(active: boolean) {
   const [stats, setStats]   = useState<NetworkStats>({ externalRequests: 0, externalBytes: 0 });
+  const [prevActive, setPrevActive] = useState(active);
+
+  if (active !== prevActive) {
+    setPrevActive(active);
+    if (active) {
+      setStats({ externalRequests: 0, externalBytes: 0 });
+    }
+  }
+
   const originalFetch       = useRef<typeof fetch | null>(null);
   const originalXHROpen     = useRef<typeof XMLHttpRequest.prototype.open | null>(null);
-
-  // Reset synchronously before the patching effect fires, so the counter
-  // starts at zero the moment monitoring becomes active.
-  useLayoutEffect(() => {
-    if (active) setStats({ externalRequests: 0, externalBytes: 0 });
-  }, [active]);
 
   useEffect(() => {
     if (!active) return;

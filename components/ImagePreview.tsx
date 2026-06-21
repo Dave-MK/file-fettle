@@ -9,11 +9,7 @@ interface Props {
   resultSize:   number;
 }
 
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1024 ** 2) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1024 ** 2).toFixed(1)} MB`;
-}
+import { fmtBytes } from "@/lib/utils";
 
 export default function ImagePreview({ originalFile, resultBlob, originalSize, resultSize }: Props) {
   const [pos,      setPos]      = useState(50); // 0-100 %
@@ -25,6 +21,7 @@ export default function ImagePreview({ originalFile, resultBlob, originalSize, r
   useEffect(() => {
     const o = URL.createObjectURL(originalFile);
     const r = URL.createObjectURL(resultBlob);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigUrl(o);
     setResultUrl(r);
     return () => { URL.revokeObjectURL(o); URL.revokeObjectURL(r); };
@@ -60,6 +57,7 @@ export default function ImagePreview({ originalFile, resultBlob, originalSize, r
         onTouchEnd={() => setDragging(false)}
       >
         {/* Original (full width, clipped right) */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={origUrl}
           alt="Original"
@@ -72,6 +70,7 @@ export default function ImagePreview({ originalFile, resultBlob, originalSize, r
           clipPath: `inset(0 0 0 ${pos}%)`,
           overflow: "hidden",
         }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={resultUrl}
             alt="Converted"

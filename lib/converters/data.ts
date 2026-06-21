@@ -7,23 +7,7 @@ export interface DataConvertOptions {
 
 type Row = Record<string, unknown>;
 
-function readAsText(file: File): Promise<string> {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => res(r.result as string);
-    r.onerror = rej;
-    r.readAsText(file);
-  });
-}
-
-function readAsArrayBuffer(file: File): Promise<ArrayBuffer> {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => res(r.result as ArrayBuffer);
-    r.onerror = rej;
-    r.readAsArrayBuffer(file);
-  });
-}
+import { readAsText, readAsArrayBuffer } from "@/lib/file-utils";
 
 function rowsToCsv(rows: Row[]): string {
   if (!rows.length) return "";

@@ -1,12 +1,7 @@
 "use client";
 
 import { TargetFormat, BADGE_META } from "@/lib/formats";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `~${b} B`;
-  if (b < 1024 ** 2) return `~${(b / 1024).toFixed(0)} KB`;
-  return `~${(b / 1024 ** 2).toFixed(1)} MB`;
-}
+import { fmtBytes } from "@/lib/utils";
 
 interface Props {
   formats:    TargetFormat[];
@@ -57,7 +52,7 @@ export default function FormatSelector({ formats, selected, onSelect, estimates 
             </p>
             {estimated !== undefined && (
               <p style={{ fontSize: 11, color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
-                {fmtBytes(estimated)}
+                ~{fmtBytes(estimated)}
               </p>
             )}
           </button>

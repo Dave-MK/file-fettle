@@ -2,14 +2,9 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Status = "idle" | "merging" | "done" | "error";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
 
 export default function PdfMergePage() {
   const [files,  setFiles]  = useState<File[]>([]);
@@ -62,12 +57,7 @@ export default function PdfMergePage() {
 
   const download = () => {
     if (!result) return;
-    const url = URL.createObjectURL(result);
-    const a   = document.createElement("a");
-    a.href     = url;
-    a.download = "merged.pdf";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(result, "merged.pdf");
   };
 
   const reset = () => { setFiles([]); setStatus("idle"); setResult(null); setError(null); };

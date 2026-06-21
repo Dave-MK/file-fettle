@@ -19,7 +19,11 @@ async function getFFmpeg(onProgress?: (p: number) => void): Promise<FFmpeg> {
         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
       });
       ffmpegInstance = ff;
-    })();
+    })().catch(err => {
+      // Allow retry on next call
+      loadPromise = null;
+      throw err;
+    });
   }
   await loadPromise;
   return ffmpegInstance!;
@@ -65,8 +69,9 @@ export async function convertAudioVideo(file: File, opts: AVConvertOptions): Pro
   const ff = await getFFmpeg(opts.onProgress);
 
   const srcExt     = file.name.split(".").pop()?.toLowerCase() ?? "bin";
-  const inputName  = `input_${Date.now()}.${srcExt}`;
-  const outputName = `output_${Date.now()}.${opts.targetExt}`;
+  const uid        = Math.random().toString(36).slice(2, 8);
+  const inputName  = `in_${uid}.${srcExt}`;
+  const outputName = `out_${uid}.${opts.targetExt}`;
 
   opts.onStatus?.("Reading file…");
   await ff.writeFile(inputName, await fetchFile(file));
@@ -97,7 +102,6 @@ export async function convertAudioVideo(file: File, opts: AVConvertOptions): Pro
       "-i", inputName,
       ...codecArgs,
       ...compressionArgs,
-      "-avoid_negative_ts", "make_zero",
       "-y",
       outputName,
     ]);
@@ -109,8 +113,10 @@ export async function convertAudioVideo(file: File, opts: AVConvertOptions): Pro
 
   opts.onStatus?.("Packaging…");
   const data = await ff.readFile(outputName);
-  const buf  = data instanceof Uint8Array ? data.buffer.slice(0) as ArrayBuffer : (data as unknown as ArrayBuffer);
-  const blob = new Blob([buf], { type: opts.targetMime });
+  // Copy into a plain ArrayBuffer — FFmpeg WASM backs its memory with SharedArrayBuffer,
+  // and Blob() rejects SharedArrayBuffer-backed views in most browsers.
+  const raw  = data instanceof Uint8Array ? data : new Uint8Array((data as unknown as ArrayBuffer));
+  const blob = new Blob([new Uint8Array(raw)], { type: opts.targetMime });
 
   // Clean up virtual FS to free WASM memory
   try { await ff.deleteFile(inputName);  } catch { /* ignore */ }

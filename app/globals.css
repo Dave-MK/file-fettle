@@ -254,36 +254,6 @@ body {
 .batch-item.error     { border-color: rgba(239,68,68,0.3);   }
 .batch-item.converting { border-color: rgba(124,106,247,0.45); }
 
-/* ── Image preview slider ────────────────────────────────────────────── */
-.before-after-container {
-  position: relative; overflow: hidden; border-radius: var(--radius-lg);
-  background: #000; user-select: none; touch-action: none;
-}
-.before-after-label {
-  position: absolute; top: 10px; padding: 3px 9px; border-radius: 999px;
-  font-size: 11px; font-weight: 700; backdrop-filter: blur(8px);
-  background: rgba(0,0,0,0.6); color: #fff; pointer-events: none; letter-spacing: 0.02em;
-}
-.before-after-divider {
-  position: absolute; top: 0; bottom: 0; width: 2px;
-  background: rgba(255,255,255,0.9); cursor: ew-resize; z-index: 2;
-}
-.before-after-handle {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 36px; height: 36px; border-radius: 50%;
-  background: #fff; display: flex; align-items: center; justify-content: center;
-  color: #111; font-size: 13px; font-weight: 700;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.5); cursor: ew-resize;
-}
-
-/* ── Privacy shield ──────────────────────────────────────────────────── */
-.privacy-shield {
-  border-radius: var(--radius-md); padding: 13px 16px;
-  display: flex; align-items: center; gap: 12px; font-size: 14px;
-}
-.privacy-shield.safe    { background: rgba(34,197,94,0.07);  border: 1px solid rgba(34,197,94,0.2);  }
-.privacy-shield.warning { background: rgba(239,68,68,0.07);  border: 1px solid rgba(239,68,68,0.22); }
 
 /* ── Number inputs ───────────────────────────────────────────────────── */
 .num-input {

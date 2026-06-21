@@ -1,18 +1,13 @@
 "use client";
 
 import { FileJob } from "@/lib/types";
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 interface Props {
   jobs:      FileJob[];
   onRemove?: (id: string) => void;
   onAdd?:    () => void;
   compact?:  boolean;
-}
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1024 ** 2) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1024 ** 2).toFixed(1)} MB`;
 }
 
 function StatusBadge({ job }: { job: FileJob }) {
@@ -27,12 +22,7 @@ function StatusBadge({ job }: { job: FileJob }) {
   return <span className="badge" style={{ background: "rgba(255,255,255,0.06)", color: "var(--text-muted)", border: "1px solid var(--border)" }}>Queued</span>;
 }
 
-function download(blob: Blob, name: string) {
-  const url = URL.createObjectURL(blob);
-  const a   = document.createElement("a");
-  a.href = url; a.download = name; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
-}
+
 
 export default function BatchQueue({ jobs, onRemove, onAdd, compact }: Props) {
   const done      = jobs.filter(j => j.status === "done").length;
@@ -76,7 +66,7 @@ export default function BatchQueue({ jobs, onRemove, onAdd, compact }: Props) {
               {job.status === "done" && job.result && job.resultName && (
                 <button
                   aria-label={`Download ${job.resultName}`}
-                  onClick={() => download(job.result!, job.resultName!)}
+                  onClick={() => downloadBlob(job.result!, job.resultName!)}
                   className="btn-primary"
                   style={{ padding: "6px 16px", fontSize: 13, flexShrink: 0, minHeight: 36 }}
                 >

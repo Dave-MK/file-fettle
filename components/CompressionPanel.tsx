@@ -8,12 +8,7 @@ interface Props {
   categoryId?: string;
 }
 
-function qualityLabel(q: number): string {
-  if (q <= 0.25) return "Maximum compression";
-  if (q <= 0.5)  return "Balanced";
-  if (q <= 0.75) return "High quality";
-  return "Maximum quality";
-}
+import { qualityLabel } from "@/lib/utils";
 
 export default function CompressionPanel({ enabled, quality, onToggle, onQuality, categoryId }: Props) {
   const isAV = categoryId === "audio" || categoryId === "video";

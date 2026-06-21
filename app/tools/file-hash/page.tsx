@@ -2,12 +2,8 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
+import DropZone from "@/components/DropZone";
+import { fmtBytes } from "@/lib/utils";
 
 function bufToHex(buf: ArrayBuffer): string {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
@@ -127,23 +123,26 @@ export default function FileHashPage() {
 
         {/* Drop zone */}
         <p className="section-label">Select file</p>
-        <div
-          className="dropzone"
-          style={{ padding: 36, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", cursor: "pointer", marginBottom: 28 }}
-          role="button" tabIndex={0} aria-label="Drop any file here to compute checksums"
-          onClick={() => document.getElementById("fh-input")?.click()}
-          onKeyDown={e => e.key === "Enter" && document.getElementById("fh-input")?.click()}
-          onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add("dropzone-over"); }}
-          onDragLeave={e => e.currentTarget.classList.remove("dropzone-over")}
-          onDrop={e => { e.preventDefault(); e.currentTarget.classList.remove("dropzone-over"); const f = e.dataTransfer.files[0]; if (f) computeHashes(f); }}
-        >
-          <input id="fh-input" type="file" style={{ display: "none" }} onChange={e => { const f = e.target.files?.[0]; if (f) computeHashes(f); e.target.value = ""; }} />
-          <div style={{ fontSize: 32 }}>📁</div>
-          <p style={{ fontWeight: 600 }}>{file ? file.name : "Drop any file here"}</p>
-          <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            {file ? fmtBytes(file.size) : "or click to browse — any file type"}
-          </p>
-        </div>
+        {!file ? (
+          <DropZone onFiles={files => files[0] && computeHashes(files[0])} minHeight={160} />
+        ) : (
+          <div className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ fontSize: 28 }}>📄</div>
+              <div>
+                <p style={{ fontWeight: 600, fontSize: 14 }}>{file.name}</p>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{fmtBytes(file.size)}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => { setFile(null); setHashes([]); }}
+              className="btn-text"
+              style={{ color: "#f87171", fontSize: 13, cursor: "pointer", background: "none", border: "none" }}
+            >
+              Clear
+            </button>
+          </div>
+        )}
 
         {/* Results */}
         {hashes.length > 0 && (

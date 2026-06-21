@@ -34,8 +34,10 @@ const CATEGORIES = [
     iconBg: "rgba(34,197,94,0.1)",
     iconBorder: "rgba(34,197,94,0.2)",
     tools: [
-      { href: "/tools/file-hash", icon: "🔑", title: "File Hash Checker", desc: "Generate SHA-256, SHA-1, SHA-512 and MD5 checksums to verify integrity.", badge: "" },
-      { href: "/tools/base64", icon: "🔠", title: "Base64 Encoder / Decoder", desc: "Encode text or files to Base64, or decode Base64 strings instantly.", badge: "" },
+      { href: "/tools/file-hash",   icon: "🔑", title: "File Hash Checker",        desc: "Generate SHA-256, SHA-1, SHA-512 and MD5 checksums to verify integrity.",             badge: "" },
+      { href: "/tools/base64",      icon: "🔠", title: "Base64 Encoder / Decoder", desc: "Encode text or files to Base64, or decode Base64 strings instantly.",                  badge: "" },
+      { href: "/tools/file-encrypt",icon: "🔒", title: "File Encrypt",             desc: "Encrypt any file with AES-256-GCM. Password-protected, decrypt back to the original.", badge: "New" },
+      { href: "/tools/exif-viewer", icon: "📸", title: "EXIF Metadata Viewer",     desc: "View camera settings, GPS location and all EXIF data in JPEG photos.",                 badge: "New" },
     ],
   },
 ];

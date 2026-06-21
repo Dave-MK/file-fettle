@@ -2,12 +2,8 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
+import DropZone from "@/components/DropZone";
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Mode = "encode" | "decode" | "file";
 
@@ -75,23 +71,13 @@ export default function Base64Page() {
   const downloadDecoded = () => {
     if (mode !== "decode") return;
     const blob = new Blob([output], { type: "text/plain" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = "decoded.txt";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(blob, "decoded.txt");
   };
 
   const downloadFileB64 = () => {
     if (!fileB64) return;
     const blob = new Blob([fileB64], { type: "text/plain" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `${file?.name ?? "file"}.b64.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(blob, `${file?.name ?? "file"}.b64.txt`);
   };
 
   return (
@@ -213,21 +199,26 @@ export default function Base64Page() {
         {mode === "file" && (
           <div>
             <p className="section-label">Select file</p>
-            <div
-              className="dropzone"
-              style={{ padding: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", cursor: "pointer", marginBottom: 20 }}
-              role="button" tabIndex={0} aria-label="Drop a file to encode to Base64"
-              onClick={() => document.getElementById("b64-input")?.click()}
-              onKeyDown={e => e.key === "Enter" && document.getElementById("b64-input")?.click()}
-              onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add("dropzone-over"); }}
-              onDragLeave={e => e.currentTarget.classList.remove("dropzone-over")}
-              onDrop={e => { e.preventDefault(); e.currentTarget.classList.remove("dropzone-over"); const f = e.dataTransfer.files[0]; if (f) loadFile(f); }}
-            >
-              <input id="b64-input" type="file" style={{ display: "none" }} onChange={e => { const f = e.target.files?.[0]; if (f) loadFile(f); e.target.value = ""; }} />
-              <div style={{ fontSize: 32 }}>📁</div>
-              <p style={{ fontWeight: 600 }}>{file ? file.name : "Drop any file here"}</p>
-              <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{file ? fmtBytes(file.size) : "or click to browse"}</p>
-            </div>
+            {!file ? (
+              <DropZone onFiles={files => files[0] && loadFile(files[0])} minHeight={160} />
+            ) : (
+              <div className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ fontSize: 28 }}>📄</div>
+                  <div>
+                    <p style={{ fontWeight: 600, fontSize: 14 }}>{file.name}</p>
+                    <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{fmtBytes(file.size)}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => { setFile(null); setFileB64(""); }}
+                  className="btn-text"
+                  style={{ color: "#f87171", fontSize: 13, cursor: "pointer", background: "none", border: "none" }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
 
             {fileB64 && (
               <div>

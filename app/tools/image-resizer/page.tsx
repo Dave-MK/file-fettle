@@ -2,12 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-
-function fmtBytes(b: number) {
-  if (b < 1024)      return `${b} B`;
-  if (b < 1_048_576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1_048_576).toFixed(1)} MB`;
-}
+import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Status = "idle" | "ready" | "resizing" | "done" | "error";
 type OutputFmt = "image/png" | "image/jpeg" | "image/webp";
@@ -94,12 +89,7 @@ export default function ImageResizerPage() {
     if (!result || !file) return;
     const ext  = format === "image/jpeg" ? "jpg" : format === "image/webp" ? "webp" : "png";
     const base = file.name.replace(/\.[^.]+$/, "");
-    const url  = URL.createObjectURL(result);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `${base}_${width}x${height}.${ext}`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(result, `${base}_${width}x${height}.${ext}`);
   };
 
   const ext = format === "image/jpeg" ? "jpg" : format === "image/webp" ? "webp" : "png";

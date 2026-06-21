@@ -7,23 +7,7 @@ export interface DocConvertOptions {
   quality:    number;
 }
 
-function readAsText(file: File): Promise<string> {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => res(r.result as string);
-    r.onerror = rej;
-    r.readAsText(file);
-  });
-}
-
-function readAsArrayBuffer(file: File): Promise<ArrayBuffer> {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => res(r.result as ArrayBuffer);
-    r.onerror = rej;
-    r.readAsArrayBuffer(file);
-  });
-}
+import { readAsText, readAsArrayBuffer } from "@/lib/file-utils";
 
 // ── PDF helpers ──────────────────────────────────────────────────────────────
 
@@ -44,7 +28,7 @@ async function pdfToText(file: File): Promise<string> {
   return parts.join("\n\n");
 }
 
-async function textToPdf(text: string, title = "Converted"): Promise<Blob> {
+async function textToPdf(text: string): Promise<Blob> {
   const { jsPDF } = await import("jspdf");
   const doc    = new jsPDF({ unit: "pt", format: "a4" });
   const margin = 48;
