@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { Maximize2 } from "lucide-react";
 import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Status = "idle" | "ready" | "resizing" | "done" | "error";
@@ -96,24 +97,20 @@ export default function ImageResizerPage() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "40px 20px 80px" }}>
-
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 36 }}>
+        <div className="flex items-start gap-4 mb-9">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.22)", fontSize: 22 }}
+            style={{ background: "var(--color-image-dim)", border: "1px solid rgba(245, 158, 11, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            📐
+            <Maximize2 size={32} strokeWidth={1.5} color="var(--color-image)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 38px)", fontWeight: 800, marginBottom: 6 }}>Image Resizer</h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <h1 className="text-display mb-1">Image Resizer</h1>
+            <p className="text-lg text-muted leading-relaxed">
               Resize images to exact pixel dimensions. Supports JPG, PNG, WebP, GIF, HEIC, SVG and more.
             </p>
           </div>

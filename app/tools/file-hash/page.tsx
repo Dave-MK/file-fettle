@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import { Key } from "lucide-react";
 import DropZone from "@/components/DropZone";
 import { fmtBytes } from "@/lib/utils";
 
@@ -98,24 +99,20 @@ export default function FileHashPage() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 660, margin: "0 auto", padding: "40px 20px 80px" }}>
-
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 36 }}>
+        <div className="flex items-start gap-4 mb-9">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", fontSize: 22 }}
+            style={{ background: "var(--color-data-dim)", border: "1px solid rgba(139, 92, 246, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            🔑
+            <Key size={32} strokeWidth={1.5} color="var(--color-data)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 38px)", fontWeight: 800, marginBottom: 6 }}>File Hash Checker</h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <h1 className="text-display mb-1">File Hash Checker</h1>
+            <p className="text-lg text-muted leading-relaxed">
               Generate SHA-256, SHA-1, SHA-512 and MD5 checksums for any file. Use to verify file integrity and authenticity.
             </p>
           </div>
@@ -126,18 +123,18 @@ export default function FileHashPage() {
         {!file ? (
           <DropZone onFiles={files => files[0] && computeHashes(files[0])} minHeight={160} />
         ) : (
-          <div className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div className="card p-4 flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
               <div style={{ fontSize: 28 }}>📄</div>
               <div>
-                <p style={{ fontWeight: 600, fontSize: 14 }}>{file.name}</p>
-                <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{fmtBytes(file.size)}</p>
+                <p className="font-semibold text-sm">{file.name}</p>
+                <p className="text-xs text-muted mt-0.5">{fmtBytes(file.size)}</p>
               </div>
             </div>
             <button
               onClick={() => { setFile(null); setHashes([]); }}
-              className="btn-text"
-              style={{ color: "#f87171", fontSize: 13, cursor: "pointer", background: "none", border: "none" }}
+              className="text-sm font-semibold transition-colors"
+              style={{ color: "#f87171", background: "none", border: "none", cursor: "pointer" }}
             >
               Clear
             </button>

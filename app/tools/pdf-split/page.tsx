@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { Scissors } from "lucide-react";
 import { fmtBytes } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "ready" | "splitting" | "done" | "error";
@@ -110,24 +111,20 @@ export default function PdfSplitPage() {
     <main id="main-content">
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
-
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 36 }}>
+        <div className="flex items-start gap-4 mb-9">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(124,106,247,0.12)", border: "1px solid rgba(124,106,247,0.22)", fontSize: 22 }}
+            style={{ background: "var(--color-pdf-dim)", border: "1px solid rgba(14, 165, 233, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            ✂️
+            <Scissors size={32} strokeWidth={1.5} color="var(--color-pdf)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 38px)", fontWeight: 800, marginBottom: 6 }}>
+            <h1 className="text-display mb-1">
               PDF Split
             </h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <p className="text-lg text-muted leading-relaxed">
               Extract individual pages or custom page ranges from any PDF. Everything runs in your browser.
             </p>
           </div>

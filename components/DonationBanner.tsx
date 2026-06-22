@@ -14,12 +14,18 @@ const AMOUNTS = [
 
 interface Props {
   variant?: "inline" | "compact";
+  onDismiss?: () => void;
 }
 
-export default function DonationBanner({ variant = "inline" }: Props) {
+export default function DonationBanner({ variant = "inline", onDismiss }: Props) {
   const [selected, setSelected] = useState(3);
   const [custom, setCustom]     = useState("");
   const [dismissed, setDismissed] = useState(false);
+
+  const handleDismiss = () => {
+    setDismissed(true);
+    onDismiss?.();
+  };
 
   if (dismissed) return null;
 
@@ -65,7 +71,7 @@ export default function DonationBanner({ variant = "inline" }: Props) {
       position: "relative",
     }}>
       <button
-        onClick={() => setDismissed(true)}
+        onClick={handleDismiss}
         style={{
           position: "absolute", top: 10, right: 12,
           background: "none", border: "none", cursor: "pointer",
@@ -139,7 +145,7 @@ export default function DonationBanner({ variant = "inline" }: Props) {
           {amount > 0 ? `Contribute £${amount}` : "Choose an amount"}
         </button>
         <button
-          onClick={() => setDismissed(true)}
+          onClick={handleDismiss}
           style={{
             background: "none", border: "1px solid var(--border)",
             borderRadius: 8, padding: "9px 14px", fontSize: 13,

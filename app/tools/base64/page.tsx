@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { Code } from "lucide-react";
 import DropZone from "@/components/DropZone";
 import { fmtBytes, downloadBlob } from "@/lib/utils";
 
@@ -84,24 +85,20 @@ export default function Base64Page() {
     <main id="main-content">
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
-
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 36 }}>
+        <div className="flex items-start gap-4 mb-9">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", fontSize: 22 }}
+            style={{ background: "var(--color-data-dim)", border: "1px solid rgba(139, 92, 246, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            🔠
+            <Code size={32} strokeWidth={1.5} color="var(--color-data)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 38px)", fontWeight: 800, marginBottom: 6 }}>
+            <h1 className="text-display mb-1">
               Base64 Encoder / Decoder
             </h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <p className="text-lg text-muted leading-relaxed">
               Encode text or files to Base64, or decode Base64 strings back to plain text. Everything runs in your browser.
             </p>
           </div>

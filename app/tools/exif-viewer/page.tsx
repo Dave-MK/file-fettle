@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ImageIcon } from "lucide-react";
 import { parseExif, ExifMetadata } from "@/lib/exif-parser";
 import { readAsArrayBuffer } from "@/lib/file-utils";
 import { fmtBytes, downloadBlob } from "@/lib/utils";
@@ -96,22 +97,18 @@ export default function ExifViewerPage() {
     <main id="main-content">
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
-
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 28 }}>
+        <div className="flex items-start gap-4 mb-7">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.22)", fontSize: 22 }}
+            style={{ background: "var(--color-image-dim)", border: "1px solid rgba(245, 158, 11, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            📸
+            <ImageIcon size={32} strokeWidth={1.5} color="var(--color-image)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 800, marginBottom: 6 }}>EXIF Metadata Viewer</h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <h1 className="text-display mb-1">EXIF Metadata Viewer</h1>
+            <p className="text-lg text-muted leading-relaxed">
               View camera settings, GPS location, timestamps and all EXIF data embedded in JPEG photos. Download as JSON or CSV.
             </p>
           </div>

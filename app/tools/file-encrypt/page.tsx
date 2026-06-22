@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { downloadBlob, fmtBytes } from "@/lib/utils";
 
 type Mode   = "encrypt" | "decrypt";
@@ -147,24 +148,20 @@ export default function FileEncryptPage() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 620, margin: "0 auto", padding: "40px 20px 80px" }}>
-
-        <nav aria-label="Breadcrumb" style={{ marginBottom: 28 }}>
-          <Link href="/tools" style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none" }}>← Tools</Link>
-        </nav>
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
 
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 28 }}>
+        <div className="flex items-start gap-4 mb-7">
           <div
             className="tool-icon-wrap"
-            style={{ background: "rgba(124,106,247,0.12)", border: "1px solid rgba(124,106,247,0.22)", fontSize: 22 }}
+            style={{ background: "var(--color-security-dim)", border: "1px solid rgba(236, 72, 153, 0.22)", display: "flex", alignItems: "center", justifyContent: "center" }}
             aria-hidden="true"
           >
-            🔒
+            <Lock size={32} strokeWidth={1.5} color="var(--color-security)" />
           </div>
           <div>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 800, marginBottom: 6 }}>File Encrypt</h1>
-            <p style={{ fontSize: 15, color: "var(--text-muted)", lineHeight: 1.65 }}>
+            <h1 className="text-display mb-1">File Encrypt</h1>
+            <p className="text-lg text-muted leading-relaxed">
               Encrypt any file with AES-256-GCM using a password. Decrypt .ffenc files back to their originals.
               Files never leave your device.
             </p>
