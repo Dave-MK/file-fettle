@@ -405,10 +405,6 @@ export default function Home() {
             >
               Convert more files
             </button>
-
-            <div style={{ marginTop: 20 }}>
-              <DonationBanner />
-            </div>
           </div>
         )}
       </div>
