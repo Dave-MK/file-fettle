@@ -35,8 +35,8 @@ export function useNetworkMonitor(active: boolean) {
   useEffect(() => {
     if (!active) return;
 
-    // Patch fetch
-    originalFetch.current = window.fetch;
+    // Patch fetch — bind to window so native fetch keeps its required `this` binding
+    originalFetch.current = window.fetch.bind(window);
     window.fetch = async function patchedFetch(input, init) {
       const url = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
       if (!isTrusted(url)) {

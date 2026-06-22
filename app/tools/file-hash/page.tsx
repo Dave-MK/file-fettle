@@ -22,7 +22,7 @@ function md5(data: ArrayBuffer): string {
   let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
 
   const origLen = b.length;
-  const padLen  = ((origLen + 8) % 64 === 0 ? 0 : 64 - ((origLen + 8) % 64)) + 8;
+  const padLen  = (origLen + 8) % 64 === 0 ? 64 : 64 - ((origLen + 8) % 64);
   const padded  = new Uint8Array(origLen + padLen + 8);
   padded.set(b);
   padded[origLen] = 0x80;
@@ -51,7 +51,7 @@ function md5(data: ArrayBuffer): string {
     d0 = (d0 + D) >>> 0;
   }
 
-  const le = (n: number) => n.toString(16).match(/../g)!.reverse().join("");
+  const le = (n: number) => n.toString(16).padStart(8, "0").match(/../g)!.reverse().join("");
   return [a0, b0, c0, d0].map(le).join("");
 }
 

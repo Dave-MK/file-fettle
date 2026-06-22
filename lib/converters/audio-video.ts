@@ -46,6 +46,7 @@ const AUDIO_CODECS: Record<string, string[]> = {
   flac: ["-c:a", "flac"],
   aac:  ["-c:a", "aac",        "-b:a", "192k"],
   m4a:  ["-c:a", "aac",        "-b:a", "192k"],
+  alac: ["-c:a", "alac", "-f", "ipod"],                  // Apple Lossless in M4A/iPod container (FFmpeg format name for ALAC)
   opus: ["-c:a", "libopus",    "-b:a", "128k"],
   aiff: ["-c:a", "pcm_s16le"],                          // AIFF PCM
   aif:  ["-c:a", "pcm_s16le"],
@@ -76,7 +77,7 @@ export async function convertAudioVideo(file: File, opts: AVConvertOptions): Pro
   opts.onStatus?.("Reading file…");
   await ff.writeFile(inputName, await fetchFile(file));
 
-  const isAudio   = file.type.startsWith("audio") || ["mp3","wav","flac","ogg","aac","m4a","opus","aiff","aif","wma","amr","m4r","mka","mp2","oga","ac3","dts","caf","wv","tta","spx"].includes(srcExt);
+  const isAudio   = file.type.startsWith("audio") || ["mp3","wav","flac","ogg","aac","m4a","alac","opus","aiff","aif","wma","amr","m4r","mka","mp2","oga","ac3","dts","caf","wv","tta","spx"].includes(srcExt);
   const codecArgs = isAudio
     ? (AUDIO_CODECS[opts.targetExt] ?? ["-c:a", "copy"])
     : (VIDEO_CODECS[opts.targetExt] ?? ["-c:v", "copy", "-c:a", "copy"]);

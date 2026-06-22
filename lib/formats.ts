@@ -110,12 +110,14 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: [],                                description: "Lossless compressed. Best archival quality." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: ["most-compatible"],               description: "Better than MP3. Native on iOS/macOS/Android." },
     { ext: "m4a",  label: "M4A",  mime: "audio/mp4",   badges: [],                                description: "AAC in an MPEG-4 container. Apple ecosystem." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless container. Compatible with Apple Music." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "State-of-the-art codec. Best quality per kilobit." },
   ],
   wav: [
     { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["recommended", "most-compatible", "smallest"], description: "Dramatically smaller. Works everywhere." },
-    { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Open format. Compact with good quality." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: ["best-quality"],                  description: "Lossless compression. Preserves all audio data." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. Lossless compression for Apple Music and iOS." },
+    { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Open format. Compact with good quality." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Better compression than MP3. Great mobile support." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "Smallest at equivalent quality. Modern codec." },
     { ext: "aiff", label: "AIFF", mime: "audio/aiff",  badges: [],                                description: "Uncompressed PCM in Apple container." },
@@ -123,6 +125,7 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
   flac: [
     { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["recommended", "smallest", "most-compatible"], description: "Much smaller. Universal playback support." },
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["fastest"],                       description: "Uncompressed PCM. Instant decode." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. Lossless for Apple Music and iOS." },
     { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Open format. Excellent compression." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Excellent quality at small file sizes." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "Modern codec. Best quality per kilobit." },
@@ -131,6 +134,7 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["recommended", "most-compatible"], description: "Universal support across all devices." },
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["best-quality"],                  description: "Lossless PCM." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: [],                                description: "Lossless compressed archive quality." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. For Apple Music and iOS." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: ["smallest"],                      description: "Better quality-to-size ratio than MP3." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "Modern codec. Excellent compression." },
   ],
@@ -139,6 +143,7 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["best-quality"],                  description: "Lossless uncompressed." },
     { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Open format. Good compression." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: [],                                description: "Lossless archive copy." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless container. Compatible with Apple Music." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "State-of-the-art codec. Excellent at low bitrates." },
   ],
   m4a: [
@@ -147,6 +152,7 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Compact open format." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: [],                                description: "Lossless archive quality." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Raw AAC — same quality, smaller container." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. Re-wrap as lossless if source was lossless." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "Modern codec. Best quality per kilobit." },
   ],
   opus: [
@@ -154,12 +160,14 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["best-quality"],                  description: "Lossless uncompressed PCM." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: [],                                description: "Lossless archive copy." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Good compression and broad support." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless container. For Apple Music." },
     { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: [],                                description: "Vorbis in Ogg container." },
   ],
   aiff: [
     { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["recommended", "smallest", "most-compatible"], description: "Massively smaller. Plays everywhere." },
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["most-compatible"],               description: "Uncompressed PCM — cross-platform standard." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: ["best-quality"],                  description: "Lossless compressed. Smaller than AIFF." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. Lossless for Apple Music and iOS." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Great compression. iOS/macOS native." },
     { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "State-of-the-art. Best quality at low bitrates." },
   ],
@@ -167,6 +175,7 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["recommended", "smallest", "most-compatible"], description: "Massively smaller. Plays everywhere." },
     { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: ["most-compatible"],               description: "Uncompressed PCM — cross-platform standard." },
     { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: ["best-quality"],                  description: "Lossless compressed. Smaller than AIFF." },
+    { ext: "alac", label: "ALAC", mime: "audio/mp4",   badges: [],                                description: "Apple Lossless. Lossless for Apple Music and iOS." },
     { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Great compression. iOS/macOS native." },
   ],
 
@@ -339,6 +348,16 @@ export const CONVERSIONS: Record<string, TargetFormat[]> = {
     { ...IMG_TARGETS.png,  badges: ["best-quality"],               description: "Lossless. Perfect quality." },
     { ...IMG_TARGETS.webp, badges: ["smallest"],                   description: "Modern web format. Excellent compression." },
     { ...IMG_TARGETS.avif, badges: [],                             description: "Next-gen. Excellent quality-to-size ratio." },
+  ],
+
+  // ── ALAC source ───────────────────────────────────────────────────────────
+  alac: [
+    { ext: "flac", label: "FLAC", mime: "audio/flac",  badges: ["recommended", "best-quality"],   description: "Lossless compressed. Widely supported alternative." },
+    { ext: "wav",  label: "WAV",  mime: "audio/wav",   badges: [],                                description: "Uncompressed PCM — universal editing format." },
+    { ext: "mp3",  label: "MP3",  mime: "audio/mpeg",  badges: ["most-compatible", "smallest"],   description: "Universal. Works on every device and player." },
+    { ext: "aac",  label: "AAC",  mime: "audio/aac",   badges: [],                                description: "Efficient Apple codec. Smaller than ALAC." },
+    { ext: "ogg",  label: "OGG",  mime: "audio/ogg",   badges: ["smallest"],                      description: "Open format. Excellent compression." },
+    { ext: "opus", label: "OPUS", mime: "audio/opus",  badges: ["smallest"],                      description: "State-of-the-art codec. Best quality per kilobit." },
   ],
 
   // ── New audio sources ─────────────────────────────────────────────────────
@@ -641,9 +660,9 @@ export const CATEGORIES: Category[] = [
     id: "audio",
     label: "Audio",
     icon: "🎵",
-    description: "MP3, WAV, FLAC, OGG, AAC, M4A, OPUS, AIFF, WMA, AMR, MKA, MP2, AC3, DTS, CAF, WV, TTA, SPX",
+    description: "MP3, WAV, FLAC, OGG, AAC, M4A, ALAC, OPUS, AIFF, WMA, AMR, MKA, MP2, AC3, DTS, CAF, WV, TTA, SPX",
     color: "#3b82f6",
-    accept: "audio/*,.flac,.ogg,.wav,.mp3,.aac,.m4a,.opus,.aiff,.aif,.wma,.amr,.m4r,.mka,.mp2,.oga,.ac3,.dts,.caf,.wv,.tta,.spx",
+    accept: "audio/*,.flac,.ogg,.wav,.mp3,.aac,.m4a,.alac,.opus,.aiff,.aif,.wma,.amr,.m4r,.mka,.mp2,.oga,.ac3,.dts,.caf,.wv,.tta,.spx",
     formats: [
       { ext: "mp3",  label: "MP3",  mime: "audio/mpeg"       },
       { ext: "wav",  label: "WAV",  mime: "audio/wav"        },
@@ -651,6 +670,7 @@ export const CATEGORIES: Category[] = [
       { ext: "ogg",  label: "OGG",  mime: "audio/ogg"        },
       { ext: "aac",  label: "AAC",  mime: "audio/aac"        },
       { ext: "m4a",  label: "M4A",  mime: "audio/mp4"        },
+      { ext: "alac", label: "ALAC", mime: "audio/mp4"        },
       { ext: "opus", label: "OPUS", mime: "audio/opus"       },
       { ext: "aiff", label: "AIFF", mime: "audio/aiff"       },
       { ext: "aif",  label: "AIF",  mime: "audio/aiff"       },

@@ -43,14 +43,29 @@ async function svgToDataUrl(objectUrl: string, w: number, h: number): Promise<st
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(patched)}`;
 }
 
+const EXT_MIME: Record<string, string> = {
+  jpg: "image/jpeg", jpeg: "image/jpeg", jfif: "image/jpeg", jpe: "image/jpeg",
+  png: "image/png", webp: "image/webp", avif: "image/avif", gif: "image/gif",
+  bmp: "image/bmp", tiff: "image/tiff", tif: "image/tiff",
+  svg: "image/svg+xml", ico: "image/x-icon", heic: "image/heic", heif: "image/heif",
+};
+
 export async function convertImage(file: File, opts: ImageConvertOptions): Promise<Blob> {
   if (!ENCODABLE_MIMES.has(opts.targetMime)) {
     throw new Error(`Output format "${opts.targetMime}" is not supported by your browser.`);
   }
 
-  const objectUrl = URL.createObjectURL(file);
+  // Some browsers leave file.type empty for less-common extensions (e.g. .jfif).
+  // A typeless blob URL won't load in an <img> element — infer from extension.
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const effectiveType = file.type || EXT_MIME[ext] || "application/octet-stream";
+  const source = effectiveType !== file.type
+    ? new File([file], file.name, { type: effectiveType })
+    : file;
+
+  const objectUrl = URL.createObjectURL(source);
   try {
-    const isSvg = file.type === "image/svg+xml" || file.name.endsWith(".svg");
+    const isSvg = effectiveType === "image/svg+xml" || file.name.endsWith(".svg");
 
     // For SVG we need a temporary pass to discover natural dimensions
     let probeImg: HTMLImageElement;
