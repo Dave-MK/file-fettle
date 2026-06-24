@@ -83,7 +83,7 @@ export default function Base64Page() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
+      <div className="tool-shell">
 
         {/* Page header */}
         <div className="flex items-start gap-4 mb-9">
@@ -197,7 +197,7 @@ export default function Base64Page() {
           <div>
             <p className="section-label">Select file</p>
             {!file ? (
-              <DropZone onFiles={files => files[0] && loadFile(files[0])} minHeight={160} />
+              <DropZone onFiles={files => files[0] && loadFile(files[0])} />
             ) : (
               <div className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

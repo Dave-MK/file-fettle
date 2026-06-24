@@ -7,10 +7,9 @@ interface Props {
   category?:  Category;
   multiple?:  boolean;
   onFiles:    (files: File[]) => void;
-  minHeight?: number;
 }
 
-export default function DropZone({ category, multiple, onFiles, minHeight = 180 }: Props) {
+export default function DropZone({ category, multiple, onFiles }: Props) {
   const [over, setOver]   = useState(false);
   const inputRef          = useRef<HTMLInputElement>(null);
 
@@ -30,7 +29,7 @@ export default function DropZone({ category, multiple, onFiles, minHeight = 180 
   return (
     <div
       className={`dropzone${over ? " dropzone-over" : ""} flex flex-col items-center justify-center gap-4 text-center select-none`}
-      style={{ minHeight, padding: "36px 32px" }}
+      style={{ padding: "36px 32px" }}
       onClick={() => inputRef.current?.click()}
       onDragOver={e => { e.preventDefault(); setOver(true); }}
       onDragLeave={() => setOver(false)}

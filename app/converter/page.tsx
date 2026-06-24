@@ -163,7 +163,7 @@ export default function Home() {
 
   return (
     <main id="main-content" ref={mainRef} tabIndex={-1} style={{ minHeight: "100vh", outline: "none" }}>
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 24px 80px" }}>
+      <div className="tool-shell">
 
         {/* ── pick-options (initial state with dropzone) ────────────── */}
         {stage === "pick-options" && !jobs.length && (
@@ -179,7 +179,7 @@ export default function Home() {
               flexDirection: "column",
               marginBottom: 20,
             }}>
-              <DropZone multiple onFiles={addFiles} minHeight={240} />
+              <DropZone multiple onFiles={addFiles} />
 
               {/* Format tabs */}
               <div style={{ borderTop: "1px solid var(--border)" }}>

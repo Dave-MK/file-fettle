@@ -133,7 +133,7 @@ export default function ToolsPage() {
             </p>
           </div>
           <Link
-            href="/"
+            href="/converter"
             style={{
               display: "inline-flex", alignItems: "center", gap: 6,
               background: "var(--accent)", color: "#fff",

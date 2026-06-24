@@ -77,7 +77,7 @@ export default function ImageCompressorPage() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
+      <div className="tool-shell">
 
         {/* Page header */}
         <div className="flex items-start gap-4 mb-9">

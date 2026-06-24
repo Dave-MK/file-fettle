@@ -40,20 +40,28 @@ export default function DonationBanner({ variant = "inline", onDismiss }: Props)
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         flexWrap: "wrap", gap: 10, padding: "10px 14px",
-        background: "linear-gradient(135deg, rgba(124,106,247,0.08), rgba(34,197,94,0.06))",
-        border: "1px solid rgba(124,106,247,0.2)", borderRadius: 10,
+        background: "linear-gradient(135deg, rgba(6,182,212,0.08), rgba(245,158,11,0.06))",
+        border: "1px solid rgba(6,182,212,0.2)", borderRadius: 10,
       }}>
         <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0, flex: "1 1 180px" }}>
-          <span style={{ color: "var(--accent)", fontWeight: 600 }}>FileFettle is free for everyone.</span>
+          <span style={{ color: "var(--color-secondary)", fontWeight: 600 }}>FileFettle is free for everyone.</span>
           {" "}A contribution keeps it that way.
         </p>
         <button
           onClick={handleDonate}
           style={{
-            background: "var(--accent)", color: "#fff", border: "none",
+            background: "var(--color-secondary)", color: "#fff", border: "none",
             borderRadius: 6, padding: "7px 14px", fontSize: 12, fontWeight: 600,
             cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
-            minHeight: 36, touchAction: "manipulation",
+            minHeight: 36, touchAction: "manipulation", transition: "all 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--color-secondary-hover)";
+            e.currentTarget.style.boxShadow = "0 2px 8px var(--color-secondary-glow)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--color-secondary)";
+            e.currentTarget.style.boxShadow = "none";
           }}
         >
           ☕ Support
@@ -65,10 +73,11 @@ export default function DonationBanner({ variant = "inline", onDismiss }: Props)
   return (
     <div style={{
       background: "var(--bg-card)",
-      border: "1px solid rgba(124,106,247,0.25)",
+      border: "1px solid rgba(6,182,212,0.25)",
       borderRadius: 14,
       padding: "20px 20px 16px",
       position: "relative",
+      borderLeft: "4px solid var(--color-secondary)",
     }}>
       <button
         onClick={handleDismiss}
@@ -97,24 +106,39 @@ export default function DonationBanner({ variant = "inline", onDismiss }: Props)
 
       {/* Amount chips */}
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
-        {AMOUNTS.map(a => (
+        {AMOUNTS.map((a, idx) => {
+          const colors = ["var(--color-secondary)", "var(--color-tertiary)", "var(--accent-primary)", "var(--color-secondary)"];
+          const glows = ["var(--color-secondary-glow)", "var(--color-tertiary-glow)", "var(--accent-glow)", "var(--color-secondary-glow)"];
+          const accentColor = colors[idx % colors.length];
+          const accentGlow = glows[idx % glows.length];
+
+          return (
           <button
             key={a.value}
             onClick={() => { setSelected(a.value); setCustom(""); }}
             style={{
               padding: "7px 14px",
               borderRadius: 8,
-              border: `1px solid ${selected === a.value && !custom ? "var(--accent)" : "var(--border)"}`,
-              background: selected === a.value && !custom ? "var(--accent-dim)" : "var(--bg-elevated)",
+              border: `1px solid ${selected === a.value && !custom ? accentColor : "var(--border)"}`,
+              background: selected === a.value && !custom ? `rgba(${accentColor === "var(--color-secondary)" ? "6,182,212" : accentColor === "var(--color-tertiary)" ? "245,158,11" : "124,106,247"},0.12)` : "var(--bg-elevated)",
               cursor: "pointer",
               display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
               transition: "all 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = accentColor;
+              e.currentTarget.style.boxShadow = `0 0 0 2px ${accentGlow}`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = selected === a.value && !custom ? accentColor : "var(--border)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{a.label}</span>
             <span style={{ fontSize: 10, color: "var(--text-muted)" }}>{a.sub}</span>
           </button>
-        ))}
+        );
+        })}
         {/* Custom input */}
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <span style={{ fontSize: 13, color: "var(--text-muted)" }}>£</span>
@@ -126,10 +150,18 @@ export default function DonationBanner({ variant = "inline", onDismiss }: Props)
             onChange={e => { setCustom(e.target.value); setSelected(0); }}
             style={{
               width: 64, padding: "7px 8px",
-              background: custom ? "var(--accent-dim)" : "var(--bg-elevated)",
-              border: `1px solid ${custom ? "var(--accent)" : "var(--border)"}`,
+              background: custom ? "var(--color-tertiary-dim)" : "var(--bg-elevated)",
+              border: `1px solid ${custom ? "var(--color-tertiary)" : "var(--border)"}`,
               borderRadius: 8, color: "var(--text)", fontSize: 13,
-              outline: "none",
+              outline: "none", transition: "all 0.15s",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "var(--color-tertiary)";
+              e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-tertiary-glow)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = custom ? "var(--color-tertiary)" : "var(--border)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           />
         </div>

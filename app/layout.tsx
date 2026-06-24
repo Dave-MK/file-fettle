@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import InstallPrompt from "@/components/InstallPrompt";
 import SiteHeader from "@/components/SiteHeader";
+import Sidebar from "@/components/Sidebar";
+import { MobileNavProvider } from "@/components/MobileNav";
+import "./design-tokens.css";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "FileFettle — Free Online File Converter | No Upload Required",
@@ -184,8 +188,15 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Resolve theme before paint to avoid a flash of the wrong theme.
+            Uses the saved choice, else the OS preference. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+          }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#7c6af7" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,11 +207,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <Analytics />
       </head>
       <body className="min-h-screen" suppressHydrationWarning>
         <a href="#main-content" className="skip-nav">Skip to main content</a>
-        <SiteHeader />
-        {children}
+        <MobileNavProvider>
+          <Sidebar />
+          <SiteHeader />
+          {children}
+        </MobileNavProvider>
         <InstallPrompt />
         {process.env.NODE_ENV === "production" && (
           <script

@@ -99,7 +99,7 @@ export default function FileHashPage() {
 
   return (
     <main id="main-content">
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
+      <div className="tool-shell">
 
         {/* Page header */}
         <div className="flex items-start gap-4 mb-9">
@@ -121,7 +121,7 @@ export default function FileHashPage() {
         {/* Drop zone */}
         <p className="section-label">Select file</p>
         {!file ? (
-          <DropZone onFiles={files => files[0] && computeHashes(files[0])} minHeight={160} />
+          <DropZone onFiles={files => files[0] && computeHashes(files[0])} />
         ) : (
           <div className="card p-4 flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">

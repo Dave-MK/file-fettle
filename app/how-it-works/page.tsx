@@ -115,7 +115,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 80 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px, 10vw, 80px)", paddingLeft: "clamp(16px, 5vw, 32px)", paddingRight: "clamp(16px, 5vw, 32px)" }}>
       {/* ── How It Works Hero ────────────────────────────────────────── */}
       <section style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, paddingTop: 40 }}>
         <div style={{ textAlign: "center", maxWidth: 700 }}>

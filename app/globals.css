@@ -41,12 +41,38 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  padding-top: 58px;
+}
+
+/* ── Scrollbars (themed, subtle — applies to every scroll container) ──── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+body.sidebar-visible {
+  padding-left: 240px;
 }
 
 /* ── Site Header ─────────────────────────────────────────────────────── */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   background: rgba(9, 9, 15, 0.88);
   backdrop-filter: blur(16px) saturate(1.4);
@@ -54,14 +80,14 @@ body {
   border-bottom: 1px solid var(--border);
 }
 .site-header-inner {
-  max-width: 1060px;
-  margin: 0 auto;
-  padding: 0 24px;
+  max-width: 100%;
   height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  padding: 0 24px;
+  margin: 0 auto;
 }
 .site-header-left {
   display: flex;
@@ -114,7 +140,27 @@ body {
 }
 .header-pill-green  { background: rgba(34,197,94,0.1);  color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
 .header-pill-purple { background: var(--accent-dim);     color: var(--accent); border: 1px solid rgba(124,106,247,0.25); }
-@media (max-width: 400px) { .header-pill-hide-xs { display: none !important; } }
+
+/* Theme toggle */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+  background: rgba(255,255,255,0.04);
+}
 
 /* ── Cards ───────────────────────────────────────────────────────────── */
 .card {
@@ -199,6 +245,15 @@ body {
   border-color: var(--accent);
   background: rgba(124,106,247,0.05);
 }
+/* Inside the wide tool shell, drop targets get taller so they stay
+   balanced (not letterboxed) at the larger width. */
+.tool-shell .dropzone {
+  min-height: 220px;
+  justify-content: center;
+}
+@media (min-width: 1024px) {
+  .tool-shell .dropzone { min-height: 300px; }
+}
 
 /* ── Format buttons ──────────────────────────────────────────────────── */
 .format-btn {
@@ -263,6 +318,73 @@ body {
 }
 .num-input:focus { outline: none; border-color: var(--accent); }
 .num-input::placeholder { color: var(--text-muted); }
+
+/* ── Tool / converter page shell ─────────────────────────────────────── */
+/* Wide app-style column — fills the space beside the sidebar on large
+   screens instead of stranding the content in a narrow 680px strip. */
+.tool-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px clamp(20px, 4vw, 48px) 80px;
+}
+@media (max-width: 768px) {
+  .tool-shell { padding: 32px 16px 64px; }
+}
+
+/* ── Landing tool grid (2 rows of 5 → responsive) ────────────────────── */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) { .tool-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 640px) { .tool-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+@media (max-width: 420px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* Every button is identical: same fixed height + equal (1fr) width */
+.tool-btn {
+  height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.12s, box-shadow 0.2s;
+}
+.tool-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.tool-btn--primary {
+  background: var(--accent-grad);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 20px var(--accent-glow);
+}
+.tool-btn--primary:hover {
+  background: var(--accent-grad);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 28px var(--accent-glow);
+  transform: translateY(-2px);
+}
+.tool-btn--ghost { background: transparent; }
 
 /* ── Landing grid ────────────────────────────────────────────────────── */
 .landing-grid {
@@ -415,3 +537,175 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; borde
 .gap-2 { gap: 8px; }
 .gap-3 { gap: 12px; }
 .gap-4 { gap: 16px; }
+
+/* ── Sidebar Navigation ────────────────────────────────────────────────── */
+.sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  z-index: 90;
+  flex-direction: column;
+  width: 240px;
+  height: calc(100vh - 58px);
+  padding-top: 20px;
+  display: flex;
+  position: fixed;
+  top: 58px;
+  left: 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+.nav-item {
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex;
+  position: relative;
+}
+
+.nav-item:not(.disabled):hover {
+  color: var(--text);
+  background: rgba(6, 182, 212, 0.1);
+  border-left: 2px solid var(--color-secondary);
+  padding-left: 10px;
+}
+
+.nav-item.active {
+  color: var(--color-secondary);
+  border-left: 2px solid var(--color-secondary);
+  background: rgba(6, 182, 212, 0.15);
+  padding-left: 10px;
+  font-weight: 600;
+}
+
+.nav-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-icon {
+  text-align: center;
+  flex-shrink: 0;
+  width: 20px;
+  font-size: 16px;
+}
+
+.nav-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Donation banner (header center) ─────────────────────────────────── */
+.donation-banner {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 420px;
+}
+
+/* ── Mobile hamburger button (sits in the header, left of the logo) ───── */
+.mobile-hamburger {
+  display: none;            /* shown only on small screens via media query */
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px;
+  margin-left: -6px;        /* optical alignment with header edge */
+  line-height: 1;
+  flex-shrink: 0;
+}
+.mobile-hamburger:hover { color: var(--accent); }
+
+/* ── Sidebar overlay (mobile drawer scrim) ───────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 95;
+}
+
+/* ── Responsive layout ───────────────────────────────────────────────── */
+
+/* Tablet — narrower sidebar, content offset matches */
+@media (max-width: 1024px) {
+  .sidebar { width: 200px; }
+  body.sidebar-visible { padding-left: 200px; }
+}
+
+/* Mobile — sidebar becomes a slide-in drawer, content spans full width */
+@media (max-width: 768px) {
+  body.sidebar-visible { padding-left: 0; }
+
+  .mobile-hamburger { display: inline-flex; }
+
+  .sidebar {
+    left: -260px;
+    width: 240px;
+    transition: left 0.28s ease;
+    z-index: 100;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  }
+  .sidebar.mobile-open { left: 0; }
+
+  .sidebar-overlay { display: block; }
+
+  main { width: 100%; }
+
+  /* Declutter the header: drop the donation banner and the "No limits" pill */
+  .donation-banner { display: none; }
+  .header-pill-hide-sm { display: none !important; }
+
+  .site-header-inner { gap: 10px; padding: 0 14px; }
+}
+
+/* Extra small phones — tighten the logo + primary buttons */
+@media (max-width: 420px) {
+  .site-logo-text { font-size: 15px; }
+  .btn-primary { font-size: 14px; padding: 12px 24px; }
+}
+
+/* Short landscape phones — slimmer header */
+@media (max-height: 600px) and (orientation: landscape) {
+  .site-header { height: 52px; }
+  .site-header-inner { height: 52px; }
+  body { padding-top: 52px; }
+}
