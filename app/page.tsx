@@ -76,7 +76,7 @@ export default function Home() {
         <div style={{ textAlign: "center" }}>
           <h2 style={{ fontSize: 32, fontWeight: 900, marginBottom: 16 }}>One Suite. Many Uses.</h2>
           <p style={{ fontSize: 18, color: "var(--text-muted)", lineHeight: 1.6 }}>
-            Convert files. Compress images. Merge PDFs. Encrypt data. Everything you need, nothing you don't.
+            Convert files. Compress images. Merge PDFs. Encrypt data. Everything you need, nothing you don&apos;t.
           </p>
         </div>
 

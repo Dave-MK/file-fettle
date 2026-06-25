@@ -33,6 +33,13 @@ export const metadata: Metadata = {
   applicationName: "FileFettle",
   creator: "FileFettle",
   manifest: "/manifest.json",
+  // favicon.ico is auto-detected from app/. The SVG (crisp, scalable) and the
+  // public/ apple icon are declared explicitly — this Next build doesn't
+  // auto-emit links for them.
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
   metadataBase: new URL("https://filefettle.pro"),
   alternates: { canonical: "/" },
   openGraph: {
@@ -202,7 +209,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="FileFettle" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
