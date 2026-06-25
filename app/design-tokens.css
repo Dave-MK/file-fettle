@@ -63,6 +63,9 @@
   --border: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.18);
 
+  /* Translucent header surface (sits over content with a blur) */
+  --header-bg: rgba(9, 9, 15, 0.88);
+
   /* Scrollbar (themed to blend with the surface) */
   --scrollbar-thumb: rgba(255, 255, 255, 0.14);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.26);
@@ -170,6 +173,8 @@
     --text-muted: #6b7280;
     --border: rgba(0, 0, 0, 0.08);
     --border-hover: rgba(0, 0, 0, 0.14);
+
+    --header-bg: rgba(250, 251, 252, 0.85);
 
     --scrollbar-thumb: rgba(0, 0, 0, 0.18);
     --scrollbar-thumb-hover: rgba(0, 0, 0, 0.32);
