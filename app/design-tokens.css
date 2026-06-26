@@ -140,8 +140,9 @@
     --accent-dim: rgba(109, 92, 231, 0.12);
     --accent-glow: rgba(109, 92, 231, 0.25);
 
-    /* Light mode tool colors */
-    --color-pdf: #0284c7;
+    /* Light mode tool colors (darkened vs dark theme so they clear 4.5:1
+       as text/icons on white surfaces, not just the 3:1 large-icon bar) */
+    --color-pdf: #0369a1;
     --color-pdf-dim: rgba(2, 132, 199, 0.12);
     --color-pdf-glow: rgba(2, 132, 199, 0.25);
     --color-image: #d97706;
@@ -155,7 +156,7 @@
     --color-data-glow: rgba(124, 58, 237, 0.25);
 
     /* Light mode secondary color */
-    --color-secondary: #0891b2;
+    --color-secondary: #0e7490;
     --color-secondary-hover: #06b6d4;
     --color-secondary-dim: rgba(6, 182, 212, 0.12);
     --color-secondary-glow: rgba(6, 182, 212, 0.25);
@@ -170,7 +171,7 @@
     --bg-card: #ffffff;
     --bg-elevated: #f3f4f6;
     --text: #0f1419;
-    --text-muted: #6b7280;
+    --text-muted: #5f6573;
     --border: rgba(0, 0, 0, 0.08);
     --border-hover: rgba(0, 0, 0, 0.14);
 
@@ -179,6 +180,36 @@
     --scrollbar-thumb: rgba(0, 0, 0, 0.18);
     --scrollbar-thumb-hover: rgba(0, 0, 0, 0.32);
 }
+
+/* ── Light Mode: badge / pill / alert text overrides ───────────────────────── */
+/* The badge, header-pill and alert text colors are hardcoded bright pastels
+   (#4ade80, #fbbf24, #60a5fa, #f87171, #a78bfa) tuned for dark backgrounds.
+   On the light-tinted surfaces they sit over white they fall to ~1.5–2.4:1.
+   Re-color them to saturated darker shades that clear WCAG AA (≥4.5:1) on
+   those tints. Backgrounds/borders stay untouched. */
+:root[data-theme="light"] .badge-green,
+:root[data-theme="light"] .badge-success,
+:root[data-theme="light"] .header-pill-green,
+:root[data-theme="light"] .alert-success    { color: #15803d; }
+
+:root[data-theme="light"] .badge-yellow,
+:root[data-theme="light"] .badge-warning,
+:root[data-theme="light"] .badge-tertiary,
+:root[data-theme="light"] .alert-warning     { color: #b45309; }
+
+:root[data-theme="light"] .badge-blue,
+:root[data-theme="light"] .badge-info,
+:root[data-theme="light"] .alert-info         { color: #1d4ed8; }
+
+:root[data-theme="light"] .badge-red,
+:root[data-theme="light"] .badge-error,
+:root[data-theme="light"] .alert-error,
+:root[data-theme="light"] .btn-danger,
+:root[data-theme="light"] .dropdown-item.destructive { color: #b91c1c; }
+
+:root[data-theme="light"] .badge-purple,
+:root[data-theme="light"] .badge-primary,
+:root[data-theme="light"] .header-pill-purple { color: #6d28d9; }
 
 /* ── Typography ────────────────────────────────────────────────────────────── */
 .text-display {
