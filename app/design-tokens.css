@@ -135,6 +135,12 @@
 :root[data-theme="light"] {
     color-scheme: light;
 
+    /* --accent (the globals.css token) is used for accent *text* — logo accent,
+       tool-card CTAs, tool-button hover label. The dark #7c6af7 only hits
+       ~3.4-4.0:1 on light surfaces, so darken it for light mode. #6a52e0 is the
+       lightest purple that still clears 4.5:1 on the accent-dim hover tint. */
+    --accent: #6a52e0;
+
     --accent-primary: #6d5ce7;
     --accent-hover: #7d6ff9;
     --accent-dim: rgba(109, 92, 231, 0.12);
