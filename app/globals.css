@@ -19,7 +19,7 @@ button, input, select, textarea { font: inherit; letter-spacing: inherit; color:
   --accent-hover: #9482ff;
   --accent-dim:   rgba(124, 106, 247, 0.12);
   --accent-glow:  rgba(124, 106, 247, 0.3);
-  --accent-grad:  linear-gradient(135deg, #7c6af7 0%, #a78bfa 100%);
+  --accent-grad:  linear-gradient(135deg, #6a52e0 0%, #7c5ce8 100%);
   --green:        #22c55e;
   --yellow:       #f59e0b;
   --blue:         #3b82f6;
