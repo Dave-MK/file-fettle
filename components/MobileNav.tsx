@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
 type MobileNavCtx = {
@@ -23,10 +23,14 @@ export function MobileNavProvider({ children }: { children: React.ReactNode }) {
 
   const hasSidebar = pathname.startsWith("/tools") || pathname === "/converter";
 
-  // Close the drawer whenever the route changes.
-  useEffect(() => {
+  // Close the drawer whenever the route changes. Adjusting state during render
+  // (rather than in an effect) lets React discard this render and redo it
+  // before committing, so the drawer never paints open on the new route.
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   // Toggle a class on <body> so CSS can offset content for the fixed sidebar.
   // Using a class (not inline style) lets media queries scale the offset
@@ -36,18 +40,16 @@ export function MobileNavProvider({ children }: { children: React.ReactNode }) {
     return () => document.body.classList.remove("sidebar-visible");
   }, [hasSidebar]);
 
-  return (
-    <Ctx.Provider
-      value={{
-        open,
-        toggle: () => setOpen(v => !v),
-        close: () => setOpen(false),
-        hasSidebar,
-      }}
-    >
-      {children}
-    </Ctx.Provider>
+  // Stable identity — this provider wraps the whole app, so a fresh object on
+  // every render would re-render every consumer of the context.
+  const toggle = useCallback(() => setOpen(v => !v), []);
+  const close  = useCallback(() => setOpen(false), []);
+  const value  = useMemo(
+    () => ({ open, toggle, close, hasSidebar }),
+    [open, toggle, close, hasSidebar],
   );
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 export function useMobileNav() {

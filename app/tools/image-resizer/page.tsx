@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { Maximize2 } from "lucide-react";
 import { fmtBytes, downloadBlob } from "@/lib/utils";
 

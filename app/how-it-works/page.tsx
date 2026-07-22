@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Merge, Scissors, Maximize2, Volume2, Key, Code, Lock, ImageIcon,
   FileUp, Settings, Download, Check, ChevronDown
@@ -320,7 +321,7 @@ export default function HowItWorks() {
         <p style={{ fontSize: 18, color: "var(--text-muted)", marginBottom: 32 }}>
           No account required. All conversions happen entirely in your browser.
         </p>
-        <a
+        <Link
           href="/"
           style={{
             display: "inline-block",
@@ -344,7 +345,7 @@ export default function HowItWorks() {
           }}
         >
           Start Converting →
-        </a>
+        </Link>
       </section>
     </div>
   );

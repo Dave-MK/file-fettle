@@ -709,3 +709,386 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; borde
   .site-header-inner { height: 52px; }
   body { padding-top: 52px; }
 }
+
+/* ── QR generator ────────────────────────────────────────────────────── */
+/* Single column: every section spans the full shell width and reflows its
+   own contents, rather than being squeezed into a fixed narrow sidebar. */
+.qr-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.qr-card { padding: 24px; }
+@media (max-width: 600px) { .qr-card { padding: 18px; } }
+
+.qr-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.qr-card-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.qr-card-desc  { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+.qr-clear {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.qr-clear:hover { color: var(--text); }
+
+/* Data-type picker: dense grid of selectable cards. The 158px minimum keeps
+   two columns even on the narrowest phone, and fills out to six at full width. */
+.qr-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  gap: 8px;
+}
+.qr-type-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  /* Long labels wrap to two lines; the min-height keeps every card in the
+     row the same size so the grid stays even. */
+  min-height: 46px;
+  min-width: 0;
+}
+.qr-type-btn > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.qr-type-btn:hover { border-color: var(--color-data); color: var(--text); }
+.qr-type-btn.active {
+  background: var(--color-data-dim);
+  border-color: var(--color-data);
+  color: var(--text);
+}
+.qr-type-btn .qr-type-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+
+/* Field grid — auto-fits as many ~240px tracks as the width allows, so the
+   same markup gives 4 columns on a wide screen and 1 on a phone. Short fields
+   take one track, longer ones two, textareas the whole row. */
+.qr-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px 18px;
+  align-items: start;
+}
+.qr-field-wide { grid-column: span 2; }
+.qr-field-full { grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  /* One track: spanning two would overflow the row. */
+  .qr-field-wide { grid-column: auto; }
+}
+
+.qr-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.qr-input:focus { border-color: var(--color-data); }
+.qr-input::placeholder { color: var(--text-muted); opacity: 0.8; }
+textarea.qr-input { resize: vertical; min-height: 76px; line-height: 1.6; }
+
+.qr-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.qr-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.5; }
+
+/* Checkerboard behind the code so transparent PNGs read correctly */
+.qr-canvas-wrap {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, rgba(0,0,0,0.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0,0,0,0.06) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.06) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.06) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+/* The canvas is intrinsically square. Width is driven by the container and
+   height is derived from the aspect ratio — setting an explicit height here
+   (or inline) is what previously squashed the code in a narrow column. */
+.qr-canvas { width: 100%; height: auto; aspect-ratio: 1 / 1; display: block; border-radius: 4px; }
+
+.qr-placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.qr-placeholder p { font-size: 13px; color: #6b7280; line-height: 1.6; }
+
+.qr-swatch {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.qr-swatch::-webkit-color-swatch-wrapper { padding: 2px; }
+.qr-swatch::-webkit-color-swatch { border: none; border-radius: 5px; }
+
+/* ── QR generator: controls ──────────────────────────────────────────── */
+
+/* Group tabs wrap instead of squeezing six labels onto one row */
+.qr-group-tabs { flex-wrap: wrap; }
+.qr-group-tabs .seg-tab { flex: 1 1 auto; padding: 8px 12px; }
+
+/* The code and its download options stack in one centred column at every
+   width. Side by side, the tall preview left a block of dead space beside the
+   much shorter button stack. */
+.qr-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+.qr-result-preview { width: 100%; max-width: 300px; min-width: 0; }
+.qr-result-actions { width: 100%; max-width: 420px; min-width: 0; }
+.qr-size-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 10px;
+  font-family: monospace;
+}
+.qr-error { font-size: 12px; color: var(--red); margin-bottom: 12px; line-height: 1.55; }
+
+/* Encoded-data inspector */
+.qr-payload { margin-top: 16px; }
+.qr-payload-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.qr-payload-toggle {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.qr-payload-toggle:hover { color: var(--text); }
+.qr-payload-copy {
+  font-size: 12px;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+.qr-payload-pre {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.7;
+  color: var(--text);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* One panel per row. Panels differ a lot in height, so side by side they left
+   ragged gaps; stacked full-width bands avoid that entirely. */
+.qr-settings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.qr-panel { padding: 20px 22px; }
+
+/* Each panel spreads its own controls across the row instead of running them
+   down a narrow column, so a full-width panel stays a short band. */
+.qr-panel-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px 26px;
+  align-items: start;
+}
+.qr-panel-body > .qr-span-all { grid-column: 1 / -1; }
+.qr-panel-body .qr-range { margin-bottom: 0; }
+.qr-panel-body .qr-check:first-child { margin-top: 0; }
+.qr-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Checkbox rows: consistent height and baseline, never overlapping labels */
+.qr-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text);
+  cursor: pointer;
+  margin-top: 10px;
+  min-height: 20px;
+}
+.qr-check input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  accent-color: var(--color-data);
+  cursor: pointer;
+  margin: 0;
+}
+.qr-check input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.4; }
+
+/* A checkbox sitting in a half-width field cell aligns to the bottom of the
+   row so it lines up with the neighbouring input rather than its label. */
+.qr-field-check {
+  display: flex;
+  align-items: center;
+  align-self: end;
+  min-height: 40px;
+}
+.qr-field-check .qr-check { margin-top: 0; }
+
+.qr-range {
+  width: 100%;
+  accent-color: var(--color-data);
+  margin-bottom: 14px;
+}
+
+/* Shape pickers */
+.qr-shape-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.qr-shape-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 4px;
+  border-radius: 9px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  min-width: 0;
+}
+.qr-shape-btn:hover { border-color: var(--color-data); color: var(--text); }
+.qr-shape-btn.active {
+  background: var(--color-data-dim);
+  border-color: var(--color-data);
+  color: var(--text);
+}
+.qr-shape-btn svg { flex-shrink: 0; }
+
+/* Colour rows */
+.qr-color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.qr-color-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.qr-hex {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Logo row */
+.qr-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  min-width: 0;
+}
+.qr-logo-thumb {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 5px;
+  background: #fff;
+  flex-shrink: 0;
+}
+.qr-logo-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.qr-logo-remove {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: #f87171;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Download button row */
+.qr-download-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.qr-download-row .btn-secondary { font-size: 12px; padding: 0 4px; min-width: 0; }

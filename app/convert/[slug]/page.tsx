@@ -52,7 +52,9 @@ export default async function ConvertPairPage({ params }: Props) {
     <main id="main-content">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // Escaping `<` stops any string in the payload from closing the
+        // script tag early — the guard Next's JSON-LD guide prescribes.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "40px 20px 80px" }}>

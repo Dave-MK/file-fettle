@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { HardDrive, Lock, Zap, FileStack, ArrowRight, RefreshCw, Merge, Scissors, Maximize2, Volume2, Key, Code, ImageIcon } from "lucide-react";
+import { HardDrive, Lock, Zap, FileStack, ArrowRight, RefreshCw, Merge, Scissors, Maximize2, Volume2, Key, Code, ImageIcon, QrCode } from "lucide-react";
 
-// 10 entries → 2 rows of 5 on large screens. Convert leads (primary),
-// Learn More closes (ghost); the 8 tools sit between.
+// 11 entries → the grid reflows at 5/4/3/2 columns. Convert leads (primary),
+// Learn More closes (ghost); the 9 tools sit between.
 const TOOLS = [
   { href: "/converter", icon: RefreshCw, label: "Convert", variant: "primary" },
   { href: "/tools/pdf-merge", icon: Merge, label: "Merge PDFs" },
@@ -15,6 +15,7 @@ const TOOLS = [
   { href: "/tools/base64", icon: Code, label: "Base64" },
   { href: "/tools/file-encrypt", icon: Lock, label: "File Encrypt" },
   { href: "/tools/exif-viewer", icon: ImageIcon, label: "EXIF Viewer" },
+  { href: "/tools/qr-generator", icon: QrCode, label: "QR Generator" },
   { href: "/how-it-works", icon: ArrowRight, label: "Learn More", variant: "ghost" },
 ] as const;
 

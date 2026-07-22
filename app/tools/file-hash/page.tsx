@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Link from "next/link";
 import { Key } from "lucide-react";
 import DropZone from "@/components/DropZone";
 import { fmtBytes } from "@/lib/utils";

@@ -1,22 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ImageIcon } from "lucide-react";
 import { parseExif, ExifMetadata } from "@/lib/exif-parser";
 import { readAsArrayBuffer } from "@/lib/file-utils";
 import { fmtBytes, downloadBlob } from "@/lib/utils";
 
 type Status = "idle" | "reading" | "done" | "error";
-
-function formatValue(v: unknown): string {
-  if (typeof v === "number") {
-    if (Number.isInteger(v)) return String(v);
-    return v.toFixed(4).replace(/\.?0+$/, "");
-  }
-  if (Array.isArray(v)) return v.map(formatValue).join(", ");
-  return String(v);
-}
 
 function MetaTable({ rows }: { rows: Array<{ tag: string; value: string }> }) {
   if (!rows.length) return null;
@@ -180,7 +170,7 @@ export default function ExifViewerPage() {
                 <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
                 <p style={{ fontWeight: 600, marginBottom: 6 }}>No EXIF data found</p>
                 <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>
-                  This image doesn't appear to contain EXIF metadata. EXIF is only embedded in JPEG files taken with a camera — screenshots and heavily processed images are often stripped.
+                  This image doesn&apos;t appear to contain EXIF metadata. EXIF is only embedded in JPEG files taken with a camera — screenshots and heavily processed images are often stripped.
                 </p>
               </div>
             )}

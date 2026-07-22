@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { RefreshCw, Merge, Scissors, Maximize2, Volume2, Key, Code, Lock, ImageIcon, HelpCircle, Shield } from "lucide-react";
+import { RefreshCw, Merge, Scissors, Maximize2, LensConcave, Key, Code, Lock, ImageIcon, QrCode, HelpCircle, Shield } from "lucide-react";
 import { useMobileNav } from "./MobileNav";
 
 const TOOLS = [
   { href: "/converter", icon: RefreshCw, label: "Convert" },
   { href: "/tools/pdf-merge", icon: Merge, label: "PDF Merge" },
   { href: "/tools/pdf-split", icon: Scissors, label: "PDF Split" },
+  { href: "/tools/qr-generator", icon: QrCode, label: "QR Generator" },
   { href: "/tools/image-resizer", icon: Maximize2, label: "Image Resizer" },
-  { href: "/tools/image-compressor", icon: Volume2, label: "Image Compressor" },
+  { href: "/tools/image-compressor", icon: LensConcave, label: "Image Compressor" },
   { href: "/tools/file-hash", icon: Key, label: "File Hash" },
   { href: "/tools/base64", icon: Code, label: "Base64" },
   { href: "/tools/file-encrypt", icon: Lock, label: "File Encrypt" },

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Lock } from "lucide-react";
 import { downloadBlob, fmtBytes } from "@/lib/utils";
 

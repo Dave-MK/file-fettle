@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
 import { Code } from "lucide-react";
 import DropZone from "@/components/DropZone";
 import { fmtBytes, downloadBlob } from "@/lib/utils";

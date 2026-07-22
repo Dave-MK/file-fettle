@@ -3,6 +3,7 @@ import InstallPrompt from "@/components/InstallPrompt";
 import SiteHeader from "@/components/SiteHeader";
 import Sidebar from "@/components/Sidebar";
 import { MobileNavProvider } from "@/components/MobileNav";
+import { faqStructuredData } from "@/lib/faq";
 import "./design-tokens.css";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
@@ -102,64 +103,9 @@ const jsonLd = {
     },
     {
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "How do I convert a file online for free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Drop your file onto FileFettle, select your output format, and click Convert. Your file is processed instantly inside your browser — no upload, no registration, completely free.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Do I need to upload my files to convert them?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. FileFettle runs entirely in your browser using WebAssembly and the Canvas API. Your files never leave your device and are never sent to any server.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What file formats can I convert?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "FileFettle supports over 80 formats: Images (JPG, PNG, WebP, AVIF, HEIC, GIF, SVG, TIFF, BMP), Audio (MP3, WAV, FLAC, OGG, AAC, M4A, OPUS, AIFF, WMA), Video (MP4, WebM, MOV, AVI, MKV, WMV, MPEG), Documents (PDF, DOCX, TXT, HTML, Markdown), and Data (CSV, JSON, XML, YAML, XLSX, XLS, ODS, TOML, INI).",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is there a file size limit?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. Since conversion runs locally in your browser, there is no server-side file size limit. The only constraint is your device's available memory.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is FileFettle free to use?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes — completely free, forever. No subscriptions, no paywalls, no ads, no tracking.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I convert video files in my browser?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. FileFettle uses FFmpeg compiled to WebAssembly to convert audio and video files directly in your browser, with no server upload required.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I convert an image to WebP, PNG or JPG?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Drop your image file onto FileFettle (supports JPG, PNG, HEIC, GIF, TIFF, BMP, SVG, AVIF and more), choose WebP, PNG, or JPG as the output format, optionally resize or adjust quality, then click Convert to download instantly.",
-          },
-        },
-      ],
+      // Shared with the visible accordion on /converter so the markup can
+      // never describe questions the page doesn't actually show.
+      mainEntity: faqStructuredData(),
     },
     {
       "@type": "HowTo",
@@ -211,7 +157,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-title" content="FileFettle" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          // Escaping `<` stops any string in the payload from closing the
+          // script tag early — the guard Next's JSON-LD guide prescribes.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
         <Analytics />
       </head>

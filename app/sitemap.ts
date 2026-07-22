@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/tools/image-compressor",0.8, "monthly"),
     url("/tools/file-hash",       0.7, "monthly"),
     url("/tools/base64",          0.7, "monthly"),
+    url("/tools/qr-generator",    0.8, "monthly"),
     ...pairPages,
   ];
 }

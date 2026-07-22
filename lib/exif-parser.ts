@@ -1,5 +1,32 @@
 "use client";
 
+/**
+ * Everything an EXIF tag can decode to. The TIFF field types this parser
+ * handles (ASCII, SHORT, LONG/SLONG, RATIONAL/SRATIONAL) yield exactly these:
+ * a string, a single number, or an array of numbers.
+ */
+export type ExifValue = string | number | number[];
+
+/** Tag values come from an untrusted file, so narrow rather than assume. */
+const asString = (v: ExifValue | undefined): string | undefined =>
+  typeof v === "string" ? v : undefined;
+
+const asNumber = (v: ExifValue | undefined): number | undefined =>
+  typeof v === "number" ? v : undefined;
+
+/**
+ * Human-readable rendering of a decoded tag. RATIONAL tags are stored as a
+ * numerator/denominator pair, so dividing them out produces values like
+ * 1.7999999999999998 — trim that to something a person would recognise.
+ */
+export function formatExifValue(v: ExifValue): string {
+  if (typeof v === "number") {
+    return Number.isInteger(v) ? String(v) : v.toFixed(4).replace(/\.?0+$/, "");
+  }
+  if (Array.isArray(v)) return v.map(formatExifValue).join(", ");
+  return v;
+}
+
 const EXIF_TAGS: Record<number, string> = {
   // TIFF tags
   0x010f: "Make",
@@ -94,7 +121,7 @@ class ExifReader {
     return s.trim();
   }
 
-  readTagValue(offset: number, type: number, count: number): any {
+  readTagValue(offset: number, type: number, count: number): ExifValue | null {
     if (type === 2) {
       // ASCII
       const valOffset = count > 4 ? this.getUint32(offset + 8) : (offset + 8);
@@ -136,8 +163,8 @@ class ExifReader {
   }
 }
 
-function parseIFD(reader: ExifReader, offset: number, tagMap: Record<number, string>): Record<string, any> {
-  const tags: Record<string, any> = {};
+function parseIFD(reader: ExifReader, offset: number, tagMap: Record<number, string>): Record<string, ExifValue> {
+  const tags: Record<string, ExifValue> = {};
   if (offset + 2 > reader.view.byteLength - reader.tiffOffset) return tags;
   
   const numEntries = reader.getUint16(offset);
@@ -171,7 +198,7 @@ export interface ExifMetadata {
     type: string;
     lastModified: string;
   };
-  camera?: Record<string, any>;
+  camera?: Record<string, ExifValue>;
   gps?: {
     latitude?: number;
     longitude?: number;
@@ -180,9 +207,9 @@ export interface ExifMetadata {
     longitudeRef?: string;
     altitudeRef?: number;
     mapLink?: string;
-    raw?: Record<string, any>;
+    raw?: Record<string, ExifValue>;
   };
-  imageDetails?: Record<string, any>;
+  imageDetails?: Record<string, ExifValue>;
   allTags: Array<{ tag: string; value: string; category: string }>;
 }
 
@@ -273,29 +300,32 @@ export function parseExif(buffer: ArrayBuffer, file: File): ExifMetadata {
   // Parse IFD0 (Image File Directory 0)
   const ifd0 = parseIFD(reader, firstIFDOffset, EXIF_TAGS);
 
-  // Parse Exif SubIFD if present
-  let subIfd: Record<string, any> = {};
-  if (ifd0.ExifIFDPointer_Offset !== undefined) {
-    subIfd = parseIFD(reader, ifd0.ExifIFDPointer_Offset, EXIF_TAGS);
+  // Parse Exif SubIFD if present. These pointers are written by parseIFD as
+  // raw uint32s, but narrow anyway — a malformed file could park anything here.
+  let subIfd: Record<string, ExifValue> = {};
+  const subIfdOffset = asNumber(ifd0.ExifIFDPointer_Offset);
+  if (subIfdOffset !== undefined) {
+    subIfd = parseIFD(reader, subIfdOffset, EXIF_TAGS);
   }
 
   // Parse GPS IFD if present
-  let gpsIfd: Record<string, any> = {};
-  if (ifd0.GPSInfoIFDPointer_Offset !== undefined) {
-    gpsIfd = parseIFD(reader, ifd0.GPSInfoIFDPointer_Offset, GPS_TAGS);
+  let gpsIfd: Record<string, ExifValue> = {};
+  const gpsIfdOffset = asNumber(ifd0.GPSInfoIFDPointer_Offset);
+  if (gpsIfdOffset !== undefined) {
+    gpsIfd = parseIFD(reader, gpsIfdOffset, GPS_TAGS);
   }
 
   // Format Camera settings
-  const camera: Record<string, any> = {};
-  const imageDetails: Record<string, any> = {};
+  const camera: Record<string, ExifValue> = {};
+  const imageDetails: Record<string, ExifValue> = {};
 
-  const addToMeta = (source: Record<string, any>, key: string, target: Record<string, any>, category: string, prettyName?: string) => {
+  const addToMeta = (source: Record<string, ExifValue>, key: string, target: Record<string, ExifValue>, category: string, prettyName?: string) => {
     if (source[key] !== undefined) {
       let val = source[key];
       // Clean up string representations if needed
       if (typeof val === "string") val = val.trim();
       target[prettyName || key] = val;
-      metadata.allTags.push({ tag: prettyName || key, value: String(val), category });
+      metadata.allTags.push({ tag: prettyName || key, value: formatExifValue(val), category });
     }
   };
 
@@ -337,7 +367,7 @@ export function parseExif(buffer: ArrayBuffer, file: File): ExifMetadata {
   if (Object.keys(gpsIfd).length > 0) {
     const gps: NonNullable<ExifMetadata["gps"]> = { raw: gpsIfd };
 
-    const parseGPSCoordinate = (coords: any, ref: string): number | undefined => {
+    const parseGPSCoordinate = (coords: ExifValue | undefined, ref: string | undefined): number | undefined => {
       if (Array.isArray(coords) && coords.length >= 3) {
         const d = coords[0];
         const m = coords[1];
@@ -349,19 +379,21 @@ export function parseExif(buffer: ArrayBuffer, file: File): ExifMetadata {
       return undefined;
     };
 
-    const lat = parseGPSCoordinate(gpsIfd.GPSLatitude, gpsIfd.GPSLatitudeRef);
-    const lng = parseGPSCoordinate(gpsIfd.GPSLongitude, gpsIfd.GPSLongitudeRef);
+    const latRef = asString(gpsIfd.GPSLatitudeRef);
+    const lngRef = asString(gpsIfd.GPSLongitudeRef);
+    const lat = parseGPSCoordinate(gpsIfd.GPSLatitude, latRef);
+    const lng = parseGPSCoordinate(gpsIfd.GPSLongitude, lngRef);
 
     if (lat !== undefined) gps.latitude = lat;
     if (lng !== undefined) gps.longitude = lng;
-    if (gpsIfd.GPSLatitudeRef) gps.latitudeRef = gpsIfd.GPSLatitudeRef;
-    if (gpsIfd.GPSLongitudeRef) gps.longitudeRef = gpsIfd.GPSLongitudeRef;
+    if (latRef) gps.latitudeRef = latRef;
+    if (lngRef) gps.longitudeRef = lngRef;
 
-    if (gpsIfd.GPSAltitude !== undefined) {
-      let alt = gpsIfd.GPSAltitude;
-      if (gpsIfd.GPSAltitudeRef === 1) alt = -alt; // Below sea level
-      gps.altitude = alt;
-      gps.altitudeRef = gpsIfd.GPSAltitudeRef;
+    const altRef = asNumber(gpsIfd.GPSAltitudeRef);
+    const rawAlt = asNumber(gpsIfd.GPSAltitude);
+    if (rawAlt !== undefined) {
+      gps.altitude = altRef === 1 ? -rawAlt : rawAlt; // ref 1 = below sea level
+      gps.altitudeRef = altRef;
     }
 
     // Generate Google Maps link if both lat and lng are successfully parsed
@@ -372,11 +404,11 @@ export function parseExif(buffer: ArrayBuffer, file: File): ExifMetadata {
     metadata.gps = gps;
 
     // Add GPS info to allTags list
-    if (lat !== undefined) metadata.allTags.push({ tag: "GPS Latitude", value: `${lat.toFixed(6)}° ${gpsIfd.GPSLatitudeRef || ""}`, category: "GPS" });
-    if (lng !== undefined) metadata.allTags.push({ tag: "GPS Longitude", value: `${lng.toFixed(6)}° ${gpsIfd.GPSLongitudeRef || ""}`, category: "GPS" });
+    if (lat !== undefined) metadata.allTags.push({ tag: "GPS Latitude", value: `${lat.toFixed(6)}° ${latRef || ""}`, category: "GPS" });
+    if (lng !== undefined) metadata.allTags.push({ tag: "GPS Longitude", value: `${lng.toFixed(6)}° ${lngRef || ""}`, category: "GPS" });
     if (gps.altitude !== undefined) metadata.allTags.push({ tag: "GPS Altitude", value: `${gps.altitude.toFixed(1)}m`, category: "GPS" });
-    if (gpsIfd.GPSTimeStamp) metadata.allTags.push({ tag: "GPS Time Stamp", value: String(gpsIfd.GPSTimeStamp), category: "GPS" });
-    if (gpsIfd.GPSDateStamp) metadata.allTags.push({ tag: "GPS Date Stamp", value: String(gpsIfd.GPSDateStamp), category: "GPS" });
+    if (gpsIfd.GPSTimeStamp) metadata.allTags.push({ tag: "GPS Time Stamp", value: formatExifValue(gpsIfd.GPSTimeStamp), category: "GPS" });
+    if (gpsIfd.GPSDateStamp) metadata.allTags.push({ tag: "GPS Date Stamp", value: formatExifValue(gpsIfd.GPSDateStamp), category: "GPS" });
   }
 
   return metadata;

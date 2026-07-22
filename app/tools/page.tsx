@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Free Online File Tools — FileFettle",
-  description: "Free browser-based file tools: PDF merge & split, image resize & compress, file hash checker, Base64 encoder. No upload, 100% private.",
+  description: "Free browser-based file tools: PDF merge & split, image resize & compress, file hash checker, Base64 encoder, QR code generator. No upload, 100% private.",
   alternates: { canonical: "/tools" },
 };
 
@@ -38,6 +38,7 @@ const CATEGORIES = [
       { href: "/tools/base64",      icon: "🔠", title: "Base64 Encoder / Decoder", desc: "Encode text or files to Base64, or decode Base64 strings instantly.",                  badge: "" },
       { href: "/tools/file-encrypt",icon: "🔒", title: "File Encrypt",             desc: "Encrypt any file with AES-256-GCM. Password-protected, decrypt back to the original.", badge: "New" },
       { href: "/tools/exif-viewer", icon: "📸", title: "EXIF Metadata Viewer",     desc: "View camera settings, GPS location and all EXIF data in JPEG photos.",                 badge: "New" },
+      { href: "/tools/qr-generator",icon: "🔳", title: "QR Code Generator",        desc: "QR codes for links, Wi-Fi, contacts, payments and more. Unlimited scans, never expires.", badge: "New" },
     ],
   },
 ];
