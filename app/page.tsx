@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HardDrive, Lock, Zap, FileStack, ArrowRight, RefreshCw, Merge, Scissors, Maximize2, Volume2, Key, Code, ImageIcon, QrCode } from "lucide-react";
+import { HardDrive, Lock, Zap, FileStack, ArrowRight, RefreshCw, Merge, Scissors, Maximize2, LensConcave, Key, Code, ImageIcon, QrCode } from "lucide-react";
 
 // 11 entries → the grid reflows at 5/4/3/2 columns. Convert leads (primary),
 // Learn More closes (ghost); the 9 tools sit between.
@@ -11,7 +11,7 @@ const TOOLS = [
   { href: "/tools/pdf-split", icon: Scissors, label: "Split PDFs" },
   { href: "/tools/qr-generator", icon: QrCode, label: "QR Generator" },
   { href: "/tools/image-resizer", icon: Maximize2, label: "Resize Images" },
-  { href: "/tools/image-compressor", icon: Volume2, label: "Compress Images" },
+  { href: "/tools/image-compressor", icon: LensConcave, label: "Compress Images" },
   { href: "/tools/file-hash", icon: Key, label: "File Hash" },
   { href: "/tools/base64", icon: Code, label: "Base64" },
   { href: "/tools/file-encrypt", icon: Lock, label: "File Encrypt" },
