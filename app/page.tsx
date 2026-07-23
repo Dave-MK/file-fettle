@@ -9,13 +9,13 @@ const TOOLS = [
   { href: "/converter", icon: RefreshCw, label: "Convert", variant: "primary" },
   { href: "/tools/pdf-merge", icon: Merge, label: "Merge PDFs" },
   { href: "/tools/pdf-split", icon: Scissors, label: "Split PDFs" },
+  { href: "/tools/qr-generator", icon: QrCode, label: "QR Generator" },
   { href: "/tools/image-resizer", icon: Maximize2, label: "Resize Images" },
   { href: "/tools/image-compressor", icon: Volume2, label: "Compress Images" },
   { href: "/tools/file-hash", icon: Key, label: "File Hash" },
   { href: "/tools/base64", icon: Code, label: "Base64" },
   { href: "/tools/file-encrypt", icon: Lock, label: "File Encrypt" },
   { href: "/tools/exif-viewer", icon: ImageIcon, label: "EXIF Viewer" },
-  { href: "/tools/qr-generator", icon: QrCode, label: "QR Generator" },
   { href: "/how-it-works", icon: ArrowRight, label: "Learn More", variant: "ghost" },
 ] as const;
 
@@ -28,7 +28,7 @@ export default function Home() {
           <h1 style={{ fontSize: "clamp(40px,6vw,60px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1 }}>
             One workspace for
             <br />
-            <span style={{ background: "var(--accent-grad)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            <span style={{ backgroundImage: "var(--brand-grad)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               all your file needs
             </span>
           </h1>

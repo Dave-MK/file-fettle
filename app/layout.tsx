@@ -34,11 +34,13 @@ export const metadata: Metadata = {
   applicationName: "FileFettle",
   creator: "FileFettle",
   manifest: "/manifest.json",
-  // favicon.ico is auto-detected from app/. The SVG (crisp, scalable) and the
-  // public/ apple icon are declared explicitly — this Next build doesn't
-  // auto-emit links for them.
+  // favicon.ico is auto-detected from app/. The high-res PNG tab icon and the
+  // Apple touch icon are declared explicitly — this Next build doesn't
+  // auto-emit links for the public/ assets.
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    // favicon.ico is auto-detected from app/; add the high-res PNG for tabs
+    // that prefer it, plus the Apple touch icon.
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
     apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
   },
   metadataBase: new URL("https://filefettle.pro"),
@@ -151,7 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#7c6af7" />
+        <meta name="theme-color" content="#7c5ce8" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="FileFettle" />

@@ -1,11 +1,16 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-export const runtime     = "edge";
+// Node runtime (not edge) so we can read the logo PNG off disk and embed it.
 export const alt         = "FileFettle — Free Online File Converter";
 export const size        = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OgImage() {
+  const logo = await readFile(join(process.cwd(), "public/file-fettle-logo.png"));
+  const logoUri = `data:image/png;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -21,22 +26,29 @@ export default async function OgImage() {
           padding: "60px 80px",
         }}
       >
-        {/* Logo mark */}
-        <div
-          style={{
-            width: 80, height: 80, borderRadius: 20,
-            background: "linear-gradient(135deg, #7c6af7, #9584ff)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 44, marginBottom: 28,
-            boxShadow: "0 8px 32px rgba(124,106,247,0.4)",
-          }}
-        >
-          ⇄
-        </div>
+        {/* Hexagon badge — the same isolated artwork used everywhere else. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={logoUri}
+          width={132}
+          height={146}
+          alt=""
+          style={{ marginBottom: 24 }}
+        />
 
-        {/* Wordmark */}
-        <div style={{ fontSize: 72, fontWeight: 800, color: "#f0f0f8", marginBottom: 16, letterSpacing: "-2px" }}>
-          FileFettle
+        {/* Wordmark — "File" white, "Fettle" in the brand gradient. */}
+        <div style={{ display: "flex", fontSize: 72, fontWeight: 800, marginBottom: 16, letterSpacing: "-2px" }}>
+          <span style={{ color: "#f0f0f8" }}>File</span>
+          <span
+            style={{
+              backgroundImage: "linear-gradient(120deg, #29b6f6 0%, #8b7bff 50%, #f45ba8 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            Fettle
+          </span>
         </div>
 
         {/* Tagline */}

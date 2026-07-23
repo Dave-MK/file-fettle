@@ -6,12 +6,19 @@
 :root {
   color-scheme: dark;
 
-  /* Accent Colors */
-  --accent-primary: #7c6af7;
-  --accent-hover: #9482ff;
-  --accent-dim: rgba(124, 106, 247, 0.12);
-  --accent-glow: rgba(124, 106, 247, 0.3);
-  --accent-grad: linear-gradient(135deg, #6a52e0 0%, #7c5ce8 100%);
+  /* Accent Colors — the logo's violet. --accent-primary is the raw logo violet
+     (#7c5ce8, used as fills/borders; white text on it clears 4.6:1). globals.css
+     wins for the shared tokens below; these are kept in step to avoid drift. */
+  --accent-primary: #7c5ce8;
+  --accent-hover: #a595ff;
+  --accent-dim: rgba(139, 120, 255, 0.12);
+  --accent-glow: rgba(139, 120, 255, 0.32);
+  --accent-grad: linear-gradient(135deg, #6a52e0 0%, #8b4bd0 50%, #b23a8f 100%);
+
+  /* Brand gradient — the blue→violet→pink of the logo mark and wordmark. Dark
+     theme uses the bright logo hues; every stop clears 4.5:1 on the near-black
+     surfaces it sits on. The light-theme override below darkens each stop. */
+  --brand-grad: linear-gradient(120deg, #22a8ee 0%, #7c5ce8 50%, #ec4899 100%);
 
   /* Secondary Color Palette (Teal) */
   --color-secondary: #06b6d4;
@@ -145,6 +152,11 @@
     --accent-hover: #7d6ff9;
     --accent-dim: rgba(109, 92, 231, 0.12);
     --accent-glow: rgba(109, 92, 231, 0.25);
+
+    /* Darkened brand gradient — each stop clears 4.5:1 on white so the gradient
+       wordmark and hero heading stay readable in light mode. These match the
+       light-theme tool colours (sky #0369a1, violet, rose). */
+    --brand-grad: linear-gradient(120deg, #0369a1 0%, #6a52e0 50%, #be185d 100%);
 
     /* Light mode tool colors (darkened vs dark theme so they clear 4.5:1
        as text/icons on white surfaces, not just the 3:1 large-icon bar) */

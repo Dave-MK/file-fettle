@@ -26,21 +26,18 @@ export default function SiteHeader() {
         )}
 
         <Link href="/" className="site-logo" aria-label="FileFettle — home">
-          <div className="logo-icon">
-            <div style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "linear-gradient(135deg, #7c6af7 0%, #a78bfa 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}>
-              <Zap size={16} color="white" strokeWidth={3} />
-            </div>
-          </div>
+          {/* Hexagon badge — the same isolated artwork used for the favicon,
+              PWA icons and OG image. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="site-logo-mark"
+            src="/file-fettle-logo.png"
+            alt=""
+            width={35}
+            height={39}
+          />
           <span className="site-logo-text">
-            file<span className="site-logo-accent">fettle</span>
+            file<span className="site-logo-grad">fettle</span>
           </span>
         </Link>
 
